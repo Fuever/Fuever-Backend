@@ -16,12 +16,12 @@ const (
 )
 
 var (
-	db  *gorm.DB = nil
-	dsn          = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", host, user, password, databaseName, port)
+	db   *gorm.DB = nil
+	_dsn          = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", host, user, password, databaseName, port)
 )
 
 func InitDB() {
-	dbEngine, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	dbEngine, err := gorm.Open(postgres.Open(_dsn), &gorm.Config{})
 	if err != nil {
 		// can't connect database
 		log.Fatalln(err)
