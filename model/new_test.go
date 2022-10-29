@@ -15,35 +15,49 @@ func TestNewCRUD(t *testing.T) {
 	tx := db.Begin()
 	db = tx
 	tx.Begin()
-	for _, n := range _newsArray {
-		CreateNew(n)
+	for _, n := range newArray {
+		err := CreateNew(n)
+		if err != nil {
+			t.Error(err)
+		}
 	}
 	news := make([]*New, 0)
 	tx.Find(&news)
 
 	{ // test CreateNew method
-		for i := 0; i < len(_newsArray); i++ {
-			compareNew(t, _newsArray[i], news[i])
+		for i := 0; i < len(newArray); i++ {
+			compareNew(t, newArray[i], news[i])
 		}
 	}
 
 	{ // test GetNewsWithLimit method
-		assert.Equal(t, len(GetNewsWithLimit(7)), 7)
+		newsArray, err := GetNewsWithLimit(7)
+		if err != nil {
+			t.Error(err)
+		}
+		assert.Equal(t, len(newsArray), 7)
 	}
 
 	{ // test GetNewByID method
-		for i := 0; i < len(_newsArray); i++ {
-			compareNew(t, GetNewByID(_newsArray[i].ID), _newsArray[i])
+		for i := 0; i < len(newArray); i++ {
+			_new, err := GetNewByID(newArray[i].ID)
+			if err != nil {
+				t.Error(err)
+			}
+			compareNew(t, _new, newArray[i])
 		}
 	}
 
 	{ // test GetNewsByAuthorIDWIthLimit method
 		limit := 3
-		newsWithAuthorIDFromDB := GetNewsByAuthorIDWIthLimit(_newsArray[1].AuthorID, limit)
+		newsWithAuthorIDFromDB, err := GetNewsByAuthorIDWIthLimit(newArray[1].AuthorID, limit)
+		if err != nil {
+			t.Error(err)
+		}
 		assert.Equal(t, len(newsWithAuthorIDFromDB), limit)
 		newsWithAuthorIDFromLiteral := make([]*New, 0)
-		for _, n := range _newsArray {
-			if n.AuthorID == _newsArray[1].AuthorID {
+		for _, n := range newArray {
+			if n.AuthorID == newArray[1].AuthorID {
 				newsWithAuthorIDFromLiteral = append(newsWithAuthorIDFromLiteral, n)
 			}
 		}
@@ -53,17 +67,31 @@ func TestNewCRUD(t *testing.T) {
 	}
 
 	{ // test UpdateNewByID method
-		_new := _newsArray[3]
+		_new := newArray[3]
 		_new.Title = "Kick Back"
-		UpdateNewByID(_new)
-		compareNew(t, _new, GetNewByID(_new.ID))
+		err := UpdateNewByID(_new)
+		if err != nil {
+			t.Error(err)
+		}
+		__new, err := GetNewByID(_new.ID)
+		if err != nil {
+			t.Error(err)
+		}
+		compareNew(t, _new, __new)
 	}
 
 	{ // test DeleteNewByID method
-		for _, n := range _newsArray {
-			DeleteNewByID(n.ID)
+		for _, n := range newArray {
+			err := DeleteNewByID(n.ID)
+			if err != nil {
+				t.Error(err)
+			}
 		}
-		assert.Equal(t, len(GetNewsWithLimit(10)), 0)
+		newsArray, err := GetNewsWithLimit(10)
+		if err != nil {
+			t.Error(err)
+		}
+		assert.Equal(t, len(newsArray), 0)
 	}
 
 	tx.Rollback()
@@ -80,7 +108,7 @@ func compareNew(t *testing.T, new1 *New, new2 *New) {
 	//assert.Equal(t, new1.CreateTime, new2.CreateTime)
 }
 
-var _newsArray = []*New{
+var newArray = []*New{
 	{
 		AuthorID: 114514,
 		Title:    "野兽先辈驾临福州大学下北泽学院",

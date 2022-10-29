@@ -1,7 +1,6 @@
 package model
 
 import (
-	"log"
 	"time"
 )
 
@@ -13,11 +12,12 @@ type New struct {
 	CreateTime time.Time `gorm:"not null"`
 }
 
-func CreateNew(_new *New) {
+func CreateNew(_new *New) error {
 	err := db.Create(_new).Error
 	if err != nil {
-		log.Println(err)
+		return err
 	}
+	return nil
 }
 
 // GetNewByID
@@ -25,50 +25,48 @@ func CreateNew(_new *New) {
 // 我希望前端展示的时候能把ID和Title绑起来
 // 这样可以少建一个索引
 // 而且减少网络开销(其实完全没必要
-func GetNewByID(id int) *New {
+func GetNewByID(id int) (*New, error) {
 	_new := &New{
 		ID: id,
 	}
 	err := db.First(_new).Error
 	if err != nil {
-		log.Println(err)
-		return nil
+		return nil, err
 	}
-	return _new
+	return _new, nil
 }
 
-func GetNewsWithLimit(limit int) []*New {
+func GetNewsWithLimit(limit int) ([]*New, error) {
 	news := make([]*New, 0)
 	err := db.Limit(limit).Find(&news).Error
 	if err != nil {
-		log.Println(err)
-		return nil
+		return nil, err
 	}
-	return news
+	return news, nil
 }
 
-func GetNewsByAuthorIDWIthLimit(authorID int, limit int) []*New {
+func GetNewsByAuthorIDWIthLimit(authorID int, limit int) ([]*New, error) {
 	news := make([]*New, 0)
 	err := db.Limit(limit).Where(&New{AuthorID: authorID}).Find(&news).Error
 	if err != nil {
-		log.Println(err)
-		return nil
+		return nil, err
 	}
-	return news
+	return news, nil
 
 }
 
-func UpdateNewByID(_new *New) {
+func UpdateNewByID(_new *New) error {
 	err := db.Where("id = ?", _new.ID).Updates(_new).Error
 	if err != nil {
-		log.Println(err)
+		return err
 	}
+	return nil
 }
 
-func DeleteNewByID(id int) {
+func DeleteNewByID(id int) error {
 	err := db.Delete(&New{}, id).Error
 	if err != nil {
-		log.Println(err)
-		return
+		return err
 	}
+	return nil
 }
