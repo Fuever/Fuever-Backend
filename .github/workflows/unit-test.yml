@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: go get ./...
 
+      - name: Add Test Model
+        run: go get -t Fuever/model
+
       - name: Build
         run: go build -v ./...
 
