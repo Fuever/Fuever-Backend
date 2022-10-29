@@ -30,7 +30,3 @@ func Register(c *gin.Context) {
 	}
 	// ! TODO
 }
-
-func 
-
-
