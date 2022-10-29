@@ -20,16 +20,6 @@ jobs:
 
     steps:
 
-      - name: Shutdown default MySQL(sudo)
-        run: sudo service mysql stop
-
-      - name: Set up MySQL
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          mysql version: '8.0'
-          mysql database: 'pansy'
-          mysql root password: 3777777
-
       - name: Start Redis
         uses: supercharge/redis-github-action@1.4.0
         with:
@@ -40,7 +30,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.18
+          go-version: 1.19
 
       - name: Install dependencies
         run: go get .
