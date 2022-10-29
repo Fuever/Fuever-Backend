@@ -9,10 +9,10 @@ import (
 
 const (
 	host         = "localhost"
-	user         = "gorm"
-	password     = "gorm"
-	databaseName = "gorm"
-	port         = "9910"
+	user         = "fuever"
+	password     = "fuever"
+	databaseName = "fuever"
+	port         = "5432"
 )
 
 var (
@@ -28,7 +28,14 @@ func InitDB() {
 	}
 	db = dbEngine
 	// automatically generate database tables
-	err = db.AutoMigrate()
+	err = db.AutoMigrate(
+		&User{},
+		&Admin{},
+		&Anniversary{},
+		&Class{},
+		&Message{},
+		&Post{},
+		&New{})
 	if err != nil {
 		log.Fatalln(err)
 	}
