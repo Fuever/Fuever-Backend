@@ -13,6 +13,13 @@ type New struct {
 	CreateTime time.Time `gorm:"not null"`
 }
 
+func CreateNew(_new *New) {
+	err := db.Create(_new).Error
+	if err != nil {
+		log.Println(err)
+	}
+}
+
 // GetNewByID
 // 说明一下为什么没有做一个用Title来查询的方法
 // 我希望前端展示的时候能把ID和Title绑起来
@@ -40,7 +47,7 @@ func GetNewsWithLimit(limit int) []*New {
 	return news
 }
 
-func GetNEwsByAuthorIDWIthLimit(authorID int, limit int) []*New {
+func GetNewsByAuthorIDWIthLimit(authorID int, limit int) []*New {
 	news := make([]*New, 0)
 	err := db.Limit(limit).Where(&New{AuthorID: authorID}).Find(&news).Error
 	if err != nil {
@@ -49,4 +56,19 @@ func GetNEwsByAuthorIDWIthLimit(authorID int, limit int) []*New {
 	}
 	return news
 
+}
+
+func UpdateNewByID(_new *New) {
+	err := db.Where("id = ?", _new.ID).Updates(_new).Error
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func DeleteNewByID(id int) {
+	err := db.Delete(&New{}, id).Error
+	if err != nil {
+		log.Println(err)
+		return
+	}
 }
