@@ -57,6 +57,7 @@ func serve(g *gin.Engine) {
 		{
 			user := pub.Group("/user")
 			{
+				user.POST("/authcode", nil)
 				user.POST("/login", nil)
 				user.POST("/register", nil)
 			}
@@ -70,7 +71,7 @@ func serve(g *gin.Engine) {
 			{
 				news.GET("/", nil)
 			}
-			
+
 			anniv := api.Group("/anniversary")
 			{
 				anniv.GET("/", nil)
