@@ -33,28 +33,28 @@ func GetTopPostsWithLimit(limit int) []*Post {
 }
 
 func getParticularStatePostWithLimit(state int, limit int) []*Post {
-	Posts := make([]*Post, 0)
-	err := db.Where(&Post{State: state}).Limit(limit).Find(&Posts).Error
+	posts := make([]*Post, 0)
+	err := db.Where(&Post{State: state}).Limit(limit).Find(&posts).Error
 	if err != nil {
 		log.Println(err)
 		return nil
 	}
-	return Posts
+	return posts
 }
 
 func GetPostsByAuthorIDWIthLimit(authorID int, limit int) []*Post {
-	Posts := make([]*Post, 0)
-	err := db.Limit(limit).Where(&Post{AuthorID: authorID}).Find(&Posts).Error
+	posts := make([]*Post, 0)
+	err := db.Limit(limit).Where(&Post{AuthorID: authorID}).Find(&posts).Error
 	if err != nil {
 		log.Println(err)
 		return nil
 	}
-	return Posts
+	return posts
 
 }
 
-func UpdatePostByID(_Post *Post) {
-	err := db.Where("id = ?", _Post.ID).Updates(_Post).Error
+func UpdatePostByID(post *Post) {
+	err := db.Where("id = ?", post.ID).Updates(post).Error
 	if err != nil {
 		log.Println(err)
 	}
