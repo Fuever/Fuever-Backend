@@ -55,7 +55,7 @@ func GetNewsByAuthorIDWIthLimit(authorID int, limit int) ([]*New, error) {
 
 }
 
-func UpdateNewByID(_new *New) error {
+func UpdateNew(_new *New) error {
 	err := db.Where("id = ?", _new.ID).Updates(_new).Error
 	if err != nil {
 		return err

@@ -66,10 +66,10 @@ func TestNewCRUD(t *testing.T) {
 		}
 	}
 
-	{ // test UpdateNewByID method
+	{ // test UpdateNew method
 		_new := newArray[3]
 		_new.Title = "Kick Back"
-		err := UpdateNewByID(_new)
+		err := UpdateNew(_new)
 		if err != nil {
 			t.Error(err)
 		}
