@@ -41,7 +41,7 @@ func GetPostsByAuthorIDWIthLimit(authorID int, limit int) ([]*Post, error) {
 
 }
 
-func UpdatePostByID(post *Post) error {
+func UpdatePost(post *Post) error {
 	err := db.Where("id = ?", post.ID).Updates(post).Error
 	if err != nil {
 		return err
