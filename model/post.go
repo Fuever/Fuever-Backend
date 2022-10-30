@@ -1,7 +1,6 @@
 package model
 
 import (
-	"log"
 	"time"
 )
 
@@ -20,50 +19,49 @@ const (
 	top           // 置顶
 )
 
-func GetNormalPostsWithLimit(limit int) []*Post {
+func GetNormalPostsWithLimit(limit int) ([]*Post, error) {
 	return getParticularStatePostWithLimit(normal, limit)
 }
 
-func GetHidePostsWithLimit(limit int) []*Post {
+func GetHidePostsWithLimit(limit int) ([]*Post, error) {
 	return getParticularStatePostWithLimit(hide, limit)
 }
 
-func GetTopPostsWithLimit(limit int) []*Post {
+func GetTopPostsWithLimit(limit int) ([]*Post, error) {
 	return getParticularStatePostWithLimit(top, limit)
 }
 
-func getParticularStatePostWithLimit(state int, limit int) []*Post {
-	posts := make([]*Post, 0)
-	err := db.Where(&Post{State: state}).Limit(limit).Find(&posts).Error
-	if err != nil {
-		log.Println(err)
-		return nil
-	}
-	return posts
-}
-
-func GetPostsByAuthorIDWIthLimit(authorID int, limit int) []*Post {
+func GetPostsByAuthorIDWIthLimit(authorID int, limit int) ([]*Post, error) {
 	posts := make([]*Post, 0)
 	err := db.Limit(limit).Where(&Post{AuthorID: authorID}).Find(&posts).Error
 	if err != nil {
-		log.Println(err)
-		return nil
+		return nil, err
 	}
-	return posts
+	return posts, nil
 
 }
 
-func UpdatePostByID(post *Post) {
+func UpdatePostByID(post *Post) error {
 	err := db.Where("id = ?", post.ID).Updates(post).Error
 	if err != nil {
-		log.Println(err)
+		return err
 	}
+	return nil
 }
 
-func DeletePostByID(id int) {
+func DeletePostByID(id int) error {
 	err := db.Delete(&Post{}, id).Error
 	if err != nil {
-		log.Println(err)
-		return
+		return err
 	}
+	return nil
+}
+
+func getParticularStatePostWithLimit(state int, limit int) ([]*Post, error) {
+	posts := make([]*Post, 0)
+	err := db.Where(&Post{State: state}).Limit(limit).Find(&posts).Error
+	if err != nil {
+		return nil, err
+	}
+	return posts, nil
 }
