@@ -2,7 +2,7 @@
 
 ## TODO
 
--[ ] 我也不知道为什么要多加一层的ORM封装
+- [ ] 我也不知道为什么要多加一层的ORM封装
     - [x] admin
     - [ ] user
     - [x] anniversary
