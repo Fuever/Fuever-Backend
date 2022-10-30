@@ -3,7 +3,7 @@ package model
 import "time"
 
 type User struct {
-	ID           int    `gorm:"primaryKey;autoIncrement"`
+	ID           int    `gorm:"primaryKey;autoIncrement;check: id < 2000000000"`
 	Mail         string `gorm:"uniqueIndex;varchar(64);not null"`
 	Username     string `gorm:"index;varchar(32);not null"`
 	Password     string `gorm:"varchar(64);not null"`
