@@ -6,7 +6,7 @@
     - [x] admin
     - [ ] user
     - [x] anniversary
-    - [ ] class
+    - [x] class
     - [x] message
     - [x] post
     - [x] new
