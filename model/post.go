@@ -14,9 +14,9 @@ type Post struct {
 }
 
 const (
-	normal = iota // 常态
-	hide          // 隐藏
-	top           // 置顶
+	_normal = iota // 常态
+	_hide          // 隐藏
+	_top           // 置顶
 )
 
 func CreatePost(post *Post) error {
@@ -28,15 +28,15 @@ func CreatePost(post *Post) error {
 }
 
 func GetNormalPostsWithOffsetLimit(offset int, limit int) ([]*Post, error) {
-	return getParticularStatePostWithOffsetLimit(normal, offset, limit)
+	return getParticularStatePostWithOffsetLimit(_normal, offset, limit)
 }
 
 func GetHidePostsWithOffsetLimit(offset int, limit int) ([]*Post, error) {
-	return getParticularStatePostWithOffsetLimit(hide, offset, limit)
+	return getParticularStatePostWithOffsetLimit(_hide, offset, limit)
 }
 
 func GetTopPostsWithOffsetLimit(offset int, limit int) ([]*Post, error) {
-	return getParticularStatePostWithOffsetLimit(top, offset, limit)
+	return getParticularStatePostWithOffsetLimit(_top, offset, limit)
 }
 
 func GetPostsByAuthorIDWIthOffsetLimit(authorID int, limit int) ([]*Post, error) {

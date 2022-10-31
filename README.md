@@ -4,7 +4,7 @@
 
 - [ ] 我也不知道为什么要多加一层的ORM封装
     - [x] admin
-    - [ ] user
+    - [x] user
     - [x] anniversary
     - [x] class
     - [x] message
