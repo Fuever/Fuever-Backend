@@ -1,7 +1,6 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"time"
 )
 
@@ -48,8 +47,8 @@ func GetMessageByAuthorIDWithOffsetLimit(authorID int, offset int, limit int) ([
 	return messages, nil
 }
 
-func DeleteMessageByID(id int) *gorm.DB {
-	err := db.Delete(&Message{ID: id})
+func DeleteMessageByID(id int) error {
+	err := db.Delete(&Message{}, id).Error
 	if err != nil {
 		return err
 	}

@@ -7,7 +7,7 @@
     - [ ] user
     - [x] anniversary
     - [ ] class
-    - [ ] message
+    - [x] message
     - [x] post
     - [x] new
 
