@@ -19,19 +19,27 @@ const (
 	top           // 置顶
 )
 
-func GetNormalPostsWithLimit(limit int) ([]*Post, error) {
-	return getParticularStatePostWithLimit(normal, limit)
+func CreatePost(post *Post) error {
+	err := db.Create(post).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func GetHidePostsWithLimit(limit int) ([]*Post, error) {
-	return getParticularStatePostWithLimit(hide, limit)
+func GetNormalPostsWithOffsetLimit(offset int, limit int) ([]*Post, error) {
+	return getParticularStatePostWithOffsetLimit(normal, offset, limit)
 }
 
-func GetTopPostsWithLimit(limit int) ([]*Post, error) {
-	return getParticularStatePostWithLimit(top, limit)
+func GetHidePostsWithOffsetLimit(offset int, limit int) ([]*Post, error) {
+	return getParticularStatePostWithOffsetLimit(hide, offset, limit)
 }
 
-func GetPostsByAuthorIDWIthLimit(authorID int, limit int) ([]*Post, error) {
+func GetTopPostsWithOffsetLimit(offset int, limit int) ([]*Post, error) {
+	return getParticularStatePostWithOffsetLimit(top, offset, limit)
+}
+
+func GetPostsByAuthorIDWIthOffsetLimit(authorID int, limit int) ([]*Post, error) {
 	posts := make([]*Post, 0)
 	err := db.Limit(limit).Where(&Post{AuthorID: authorID}).Find(&posts).Error
 	if err != nil {
@@ -57,9 +65,9 @@ func DeletePostByID(id int) error {
 	return nil
 }
 
-func getParticularStatePostWithLimit(state int, limit int) ([]*Post, error) {
+func getParticularStatePostWithOffsetLimit(state int, offset int, limit int) ([]*Post, error) {
 	posts := make([]*Post, 0)
-	err := db.Where(&Post{State: state}).Limit(limit).Find(&posts).Error
+	err := db.Where(&Post{State: state}).Offset(offset).Limit(limit).Find(&posts).Error
 	if err != nil {
 		return nil, err
 	}

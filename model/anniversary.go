@@ -31,18 +31,18 @@ func GetAnniversaryByID(id int) (*Anniversary, error) {
 	return anniv, err
 }
 
-func GetAnniversariesWithLimit(limit int) ([]*Anniversary, error) {
+func GetAnniversariesWithOffsetLimit(offset int, limit int) ([]*Anniversary, error) {
 	anniversaries := make([]*Anniversary, 0)
-	err := db.Limit(limit).Find(&anniversaries).Error
+	err := db.Limit(limit).Offset(offset).Find(&anniversaries).Error
 	if err != nil {
 		return nil, err
 	}
 	return anniversaries, nil
 }
 
-func GetAnniversariesByAdminIDWIthLimit(adminID int, limit int) ([]*Anniversary, error) {
+func GetAnniversariesByAdminIDWIthOffsetLimit(adminID int, offset int, limit int) ([]*Anniversary, error) {
 	anniversaries := make([]*Anniversary, 0)
-	err := db.Limit(limit).Where(&Anniversary{AdminID: adminID}).Find(&anniversaries).Error
+	err := db.Limit(limit).Offset(offset).Where(&Anniversary{AdminID: adminID}).Find(&anniversaries).Error
 	if err != nil {
 		return nil, err
 	}

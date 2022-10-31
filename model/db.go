@@ -8,16 +8,16 @@ import (
 )
 
 const (
-	host         = "localhost"
-	user         = "fuever"
-	password     = "fuever"
-	databaseName = "fuever"
-	port         = "5432"
+	_host         = "localhost"
+	_user         = "fuever"
+	_password     = "fuever"
+	_databaseName = "fuever"
+	_port         = "5432"
 )
 
 var (
 	db   *gorm.DB = nil
-	_dsn          = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", host, user, password, databaseName, port)
+	_dsn          = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", _host, _user, _password, _databaseName, _port)
 )
 
 func InitDB() {

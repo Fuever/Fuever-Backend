@@ -36,18 +36,18 @@ func GetNewByID(id int) (*New, error) {
 	return _new, nil
 }
 
-func GetNewsWithLimit(limit int) ([]*New, error) {
+func GetNewsWithOffsetLimit(offset int, limit int) ([]*New, error) {
 	news := make([]*New, 0)
-	err := db.Limit(limit).Find(&news).Error
+	err := db.Offset(offset).Limit(limit).Find(&news).Error
 	if err != nil {
 		return nil, err
 	}
 	return news, nil
 }
 
-func GetNewsByAuthorIDWIthLimit(authorID int, limit int) ([]*New, error) {
+func GetNewsByAuthorIDWIthOffsetLimit(authorID int, offset int, limit int) ([]*New, error) {
 	news := make([]*New, 0)
-	err := db.Limit(limit).Where(&New{AuthorID: authorID}).Find(&news).Error
+	err := db.Offset(offset).Limit(limit).Where(&New{AuthorID: authorID}).Find(&news).Error
 	if err != nil {
 		return nil, err
 	}

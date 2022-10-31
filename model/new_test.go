@@ -30,8 +30,8 @@ func TestNewCRUD(t *testing.T) {
 		}
 	}
 
-	{ // test GetNewsWithLimit method
-		newsArray, err := GetNewsWithLimit(7)
+	{ // test GetNewsWithOffsetLimit method
+		newsArray, err := GetNewsWithOffsetLimit(0, 7)
 		if err != nil {
 			t.Error(err)
 		}
@@ -48,9 +48,9 @@ func TestNewCRUD(t *testing.T) {
 		}
 	}
 
-	{ // test GetNewsByAuthorIDWIthLimit method
+	{ // test GetNewsByAuthorIDWIthOffsetLimit method
 		limit := 3
-		newsWithAuthorIDFromDB, err := GetNewsByAuthorIDWIthLimit(newArray[1].AuthorID, limit)
+		newsWithAuthorIDFromDB, err := GetNewsByAuthorIDWIthOffsetLimit(newArray[1].AuthorID, 0, limit)
 		if err != nil {
 			t.Error(err)
 		}
@@ -87,7 +87,7 @@ func TestNewCRUD(t *testing.T) {
 				t.Error(err)
 			}
 		}
-		newsArray, err := GetNewsWithLimit(10)
+		newsArray, err := GetNewsWithOffsetLimit(0, 10)
 		if err != nil {
 			t.Error(err)
 		}
