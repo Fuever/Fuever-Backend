@@ -11,6 +11,7 @@ type Post struct {
 	CreatedTime time.Time `gorm:"not null"`
 	UpdatedTime time.Time `gorm:"not null"`
 	State       int       `gorm:"not null"`
+	BlockID     int       `gorm:"column:block_id;not null"`
 }
 
 const (
@@ -27,16 +28,16 @@ func CreatePost(post *Post) error {
 	return nil
 }
 
-func GetNormalPostsWithOffsetLimit(offset int, limit int) ([]*Post, error) {
-	return getParticularStatePostWithOffsetLimit(_normal, offset, limit)
+func GetNormalPostsWithOffsetLimit(blockID int, offset int, limit int) ([]*Post, error) {
+	return getParticularStatePostWithOffsetLimit(blockID, _normal, offset, limit)
 }
 
-func GetHidePostsWithOffsetLimit(offset int, limit int) ([]*Post, error) {
-	return getParticularStatePostWithOffsetLimit(_hide, offset, limit)
+func GetHidePostsWithOffsetLimit(blockID int, offset int, limit int) ([]*Post, error) {
+	return getParticularStatePostWithOffsetLimit(blockID, _hide, offset, limit)
 }
 
-func GetTopPostsWithOffsetLimit(offset int, limit int) ([]*Post, error) {
-	return getParticularStatePostWithOffsetLimit(_top, offset, limit)
+func GetTopPostsWithOffsetLimit(blockID int, offset int, limit int) ([]*Post, error) {
+	return getParticularStatePostWithOffsetLimit(blockID, _top, offset, limit)
 }
 
 func GetPostsByAuthorIDWIthOffsetLimit(authorID int, limit int) ([]*Post, error) {
@@ -65,9 +66,9 @@ func DeletePostByID(id int) error {
 	return nil
 }
 
-func getParticularStatePostWithOffsetLimit(state int, offset int, limit int) ([]*Post, error) {
+func getParticularStatePostWithOffsetLimit(blockID int, state int, offset int, limit int) ([]*Post, error) {
 	posts := make([]*Post, 0)
-	err := db.Where(&Post{State: state}).Offset(offset).Limit(limit).Find(&posts).Error
+	err := db.Where(&Post{State: state, BlockID: blockID}).Offset(offset).Limit(limit).Find(&posts).Error
 	if err != nil {
 		return nil, err
 	}

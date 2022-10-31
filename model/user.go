@@ -16,6 +16,7 @@ type User struct {
 	Job          string
 	EntranceTime time.Time
 	ClassID      int `gorm:"column:class_id;index"`
+	Residence    string
 }
 
 // CreateUser

@@ -36,6 +36,7 @@ func InitDB() {
 		&Message{},
 		&Post{},
 		&New{},
+		&Block{},
 	)
 	if err != nil {
 		log.Fatalln(err)
