@@ -1,8 +1,9 @@
 package model
 
 type Block struct {
-	ID    int    `gorm:"primaryKey;autoIncrement"`
-	Title string `gorm:"varchar(128);not null;uniqueIndex"`
+	ID       int    `gorm:"primaryKey;autoIncrement"`
+	Title    string `gorm:"varchar(128);not null;uniqueIndex"`
+	AuthorID int    `gorm:"column:author_id;not null;index"`
 }
 
 func CreateBlock(block *Block) error {

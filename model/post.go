@@ -12,6 +12,7 @@ type Post struct {
 	UpdatedTime time.Time `gorm:"not null"`
 	State       int       `gorm:"not null"`
 	BlockID     int       `gorm:"column:block_id;not null"`
+	IsLock      bool      `gorm:"column:is_lock"`
 }
 
 const (
