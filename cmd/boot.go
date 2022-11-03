@@ -2,11 +2,16 @@ package main
 
 import (
 	"Fuever/model"
+	"Fuever/router"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	model.InitDB()
 	g := gin.Default()
-	g.Run(":8080")
+	router.InitRoute(g)
+	err := g.Run(":8080")
+	if err != nil {
+		panic(err)
+	}
 }
