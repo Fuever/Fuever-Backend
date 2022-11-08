@@ -2,7 +2,7 @@ package router
 
 import "github.com/gin-gonic/gin"
 
-func serve(g *gin.Engine) {
+func InitRoute(g *gin.Engine) {
 
 	loginCheck := func(ctx *gin.Context) {} // authentication middleware
 

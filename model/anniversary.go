@@ -10,6 +10,7 @@ type Anniversary struct {
 	Start    time.Time `gorm:"not null"`
 	End      time.Time `gorm:"not null"`
 	Location string    `gorm:"varchar(128);not null"`
+	Cover    string    `gorm:"varchar(128)"`
 }
 
 func CreateAnniversary(anniversary *Anniversary) error {
