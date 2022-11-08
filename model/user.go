@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 type User struct {
 	ID           int    `gorm:"primaryKey;autoIncrement;check: id < 2000000000"`
 	Mail         string `gorm:"uniqueIndex;varchar(64);not null"`
@@ -14,7 +12,7 @@ type User struct {
 	Gender       bool
 	Age          int
 	Job          string
-	EntranceTime time.Time
+	EntranceTime int64
 	ClassID      int `gorm:"column:class_id;index"`
 	Residence    string
 }
