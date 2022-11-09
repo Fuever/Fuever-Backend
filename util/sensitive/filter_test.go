@@ -14,8 +14,8 @@ func TestFilter(t *testing.T) {
 		t.Failed()
 	}
 
-	str := filter.ReplaceSensitiveWord("测试QQ", "*")
-	if str != "测试**" {
+	str := filter.ReplaceSensitiveWord("测试QQ", "哈")
+	if str != "测试哈哈" {
 		t.Failed()
 	}
 }
