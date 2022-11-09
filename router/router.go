@@ -53,28 +53,31 @@ func InitRoute(g *gin.Engine) {
 
 		}
 
-		pub := api.Group("/pub", nil)
+		pub := api.Group("/pub")
 		{
 			user := pub.Group("/user")
 			{
-				user.POST("/authcode", nil)
-				user.POST("/login", nil)
-				user.POST("/register", nil)
+				user.POST("/authcode", GenerateAuthcode)
+				user.POST("/login", Login)
+				user.POST("/register", Register)
+
 			}
 
 			admin := api.Group("/admin")
 			{
-				admin.POST("/login", nil)
+				admin.POST("/login", LoginAdmin)
 			}
 
 			news := api.Group("/news")
 			{
-				news.GET("/", nil)
+				news.GET("/", GetOneNews)
+				news.POST("/", GetNews)
 			}
 
 			anniv := api.Group("/anniversary")
 			{
-				anniv.GET("/", nil)
+				anniv.GET("/", GetOneAnniv)
+				anniv.POST("/", GetAnniv)
 			}
 
 		}
