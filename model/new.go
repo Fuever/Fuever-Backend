@@ -1,16 +1,12 @@
 package model
 
-import (
-	"time"
-)
-
 type New struct {
-	ID         int       `gorm:"primaryKey;autoIIncrement"`
-	AuthorID   int       `gorm:"column:author_id;not null;index"`
-	Title      string    `gorm:"varchar(128);not null"` // 我觉得这个地方要建一个索引啊
-	Content    string    `gorm:"text;not null"`
-	CreateTime time.Time `gorm:"not null"`
-	Cover      string    `gorm:"varchar(128)"` // 新闻的封面
+	ID         int    `gorm:"primaryKey;autoIIncrement"`
+	AuthorID   int    `gorm:"column:author_id;not null;index"`
+	Title      string `gorm:"varchar(128);not null"` // 我觉得这个地方要建一个索引啊
+	Content    string `gorm:"text;not null"`
+	CreateTime int64  `gorm:"not null"`
+	Cover      string `gorm:"varchar(128)"` // 新闻的封面
 }
 
 func CreateNew(_new *New) error {

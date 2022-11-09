@@ -117,31 +117,31 @@ var newArray = []*New{
 		AuthorID:   17,
 		Title:      "科西嘉的怪物在儒安港登陆",
 		Content:    "科西嘉的怪物在儒安港登陆",
-		CreateTime: time.Now(),
+		CreateTime: time.Now().Unix(),
 	}, {
 		AuthorID:   17,
 		Title:      "吃人的魔鬼向格腊斯前进",
 		Content:    "吃人的魔鬼向格腊斯前进",
-		CreateTime: time.Now(),
+		CreateTime: time.Now().Unix(),
 	}, {
 		AuthorID:   114,
 		Title:      "篡位者进入格勒诺布尔",
 		Content:    "篡位者进入格勒诺布尔",
-		CreateTime: time.Now(),
+		CreateTime: time.Now().Unix(),
 	}, {
 		AuthorID:   17,
 		Title:      "波拿巴占领里昂",
 		Content:    "波拿巴占领里昂",
-		CreateTime: time.Now(),
+		CreateTime: time.Now().Unix(),
 	}, {
 		AuthorID:   17,
 		Title:      "拿破仑接近枫丹白露",
 		Content:    "拿破仑接近枫丹白露",
-		CreateTime: time.Now(),
+		CreateTime: time.Now().Unix(),
 	}, {
 		AuthorID:   114,
 		Title:      "皇帝陛下将于今日抵达他忠实的巴黎",
 		Content:    "皇帝陛下将于今日抵达他忠实的巴黎",
-		CreateTime: time.Now(),
+		CreateTime: time.Now().Unix(),
 	},
 }
