@@ -196,17 +196,92 @@ func DelNews(c *gin.Context) {
 }
 
 func GetPosts(c *gin.Context) {
-
+	blockid, _ := strconv.Atoi(c.DefaultQuery("blockid", "0"))
+	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "10"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	if posts, err := model.GetNormalPostsWithOffsetLimit(blockid, offset, limit); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": FU_DBError,
+			"msg":  "coule not get the posts",
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"code": FU_StatusOK,
+			"msg":  "ok",
+			"data": posts,
+		})
+	}
 }
 func GetReviews(c *gin.Context) {
-
+	postid, _ := strconv.Atoi(c.Param("id"))
+	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "10"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	if posts, err := model.GetMessageByPostIDWithOffsetLimit(postid, offset, limit); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": FU_DBError,
+			"msg":  "coule not get the post's review",
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"code": FU_StatusOK,
+			"msg":  "ok",
+			"data": posts,
+		})
+	}
 }
 func CreatePost(c *gin.Context) {
-
+	np := model.Post{}
+	if err := c.ShouldBindJSON(&np); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": FU_ReqNotJson,
+			"msg":  "The request body is not json-formatted",
+		})
+	} else {
+		if err_ := model.CreatePost(&np); err_ != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"code": FU_DBError,
+				"msg":  "could not create the post",
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"code": FU_StatusOK,
+				"msg":  "ok",
+			})
+		}
+	}
 }
-func ReviewPost(c *gin.Context) {
-
+func ReplyPost(c *gin.Context) {
+	nm := model.Message{}
+	if err := c.ShouldBindJSON(&nm); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": FU_ReqNotJson,
+			"msg":  "The request body is not json-formatted",
+		})
+	} else {
+		if err_ := model.CreateMessage(&nm); err_ != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"code": FU_DBError,
+				"msg":  "could not create the reply",
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"code": FU_StatusOK,
+				"msg":  "ok",
+			})
+		}
+	}
 }
 func DeletePost(c *gin.Context) {
-
+	postid, _ := strconv.Atoi(c.Query("postid"))
+	if err := model.DeletePostByID(postid); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": FU_DBError,
+			"msg":  "could not delete the post",
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"code": FU_StatusOK,
+			"msg":  "ok",
+		})
+	}
 }

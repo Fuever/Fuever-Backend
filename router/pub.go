@@ -2,6 +2,7 @@ package router
 
 import (
 	"Fuever/model"
+	"Fuever/service"
 	"net/http"
 	"strconv"
 
@@ -9,9 +10,10 @@ import (
 )
 
 type UserInfo struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	AuthCode string `json:"authcode" binding:"required"`
+	Username  string `json:"username" binding:"required"`
+	Password  string `json:"password" binding:"required"`
+	CaptchaID string `json:"captchaid binding:"required`
+	AuthCode  string `json:"authcode" binding:"required"`
 }
 
 func ReponseWrapper(c *gin.Context, code int, msg string, data *gin.H) {
@@ -22,9 +24,22 @@ func ReponseWrapper(c *gin.Context, code int, msg string, data *gin.H) {
 	})
 }
 
+// ! usage: <img src="data:image/png;base64,${imageStr}"/>
+type img struct {
+	id     string `json:"captchaid" binding:"required"`
+	imgstr string `json:"imgstr" binding:"required"`
+}
+
 func GenerateAuthcode(c *gin.Context) {
-	// ! TODO
-	//  ! the authcode must carry some identification marks
+	id, imgstr, _ := service.MakeCaptcha()
+	ni := img{}
+	ni.id = id
+	ni.imgstr = imgstr
+	c.JSON(http.StatusOK, gin.H{
+		"code": FU_StatusOK,
+		"msg":  "usage: <img src=\"data:image/png;base64,${imageStr}\"/>",
+		"data": ni,
+	})
 }
 
 func Register(c *gin.Context) {
@@ -43,21 +58,25 @@ func Register(c *gin.Context) {
 			"data": nil,
 		})
 	}
-
-	// ! do something with the authcode
-
-	newuser := model.User{}
-	newuser.Nickname = ui.Username
-	newuser.Password = ui.Password
-	if err := model.CreateUser(&newuser); err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": FU_DBError,
-			"msg":  "Could not create the new user",
-		})
+	if flag := service.VerifyCaptcha(ui.CaptchaID, ui.AuthCode); flag == true {
+		newuser := model.User{}
+		newuser.Nickname = ui.Username
+		newuser.Password = ui.Password
+		if err := model.CreateUser(&newuser); err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"code": FU_DBError,
+				"msg":  "Could not create the new user",
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"code": FU_StatusOK,
+				"msg":  "ok",
+			})
+		}
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"code": FU_StatusOK,
-			"msg":  "ok",
+			"code": FU_CaptchaAuthFailed,
+			"msg":  "Captcha authentication failed",
 		})
 	}
 }

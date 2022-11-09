@@ -45,7 +45,7 @@ func InitRoute(g *gin.Engine) {
 				// create a new post
 				post.POST("/", CreatePost)
 				// create new message of the post which id = <:id>
-				post.POST("/:id", ReviewPost)
+				post.POST("/:id", ReplyPost)
 				// delete post which id = <:id>
 				post.DELETE("/:id", DeletePost)
 
@@ -57,7 +57,7 @@ func InitRoute(g *gin.Engine) {
 		{
 			user := pub.Group("/user")
 			{
-				user.POST("/authcode", GenerateAuthcode)
+				user.GET("/captcha", GenerateAuthcode)
 				user.POST("/login", Login)
 				user.POST("/register", Register)
 
