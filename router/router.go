@@ -12,21 +12,21 @@ func InitRoute(g *gin.Engine) {
 		{
 			user := auth.Group("/user", nil)
 			{
-				user.GET("/", nil)
-				user.POST("/", nil)
-				user.PUT("/", nil)
-				user.DELETE("/", nil)
+				user.GET("/", GetUser)
+				user.POST("/", UpdateUser)
+				user.PUT("/", AddUser)
+				user.DELETE("/", DelUser)
 			}
 
 			admin := auth.Group("/admin", nil)
 			{
 				//TODO
-				admin.POST("/anniversary", nil)
-				admin.PUT("/anniversary", nil)
-				admin.DELETE("/anniversary", nil)
-				admin.POST("/news", nil)
-				admin.PUT("/news", nil)
-				admin.DELETE("/news", nil)
+				admin.POST("/anniversary", AddAnniv)
+				admin.PUT("/anniversary", FixAnniv)
+				admin.DELETE("/anniversary", DelAnniv)
+				admin.POST("/news", AddNews)
+				admin.PUT("/news", FixNews)
+				admin.DELETE("/news", DelNews)
 			}
 
 			// recommend alumnus api
@@ -38,16 +38,16 @@ func InitRoute(g *gin.Engine) {
 			post := auth.Group("/posts")
 			{
 				// return post list
-				post.GET("/", nil)
+				post.GET("/", GetPosts)
 				// return all message of the post which id = <:id>
 				// List[Message]
-				post.GET("/:id", nil)
+				post.GET("/:id", GetReviews)
 				// create a new post
-				post.POST("/", nil)
+				post.POST("/", CreatePost)
 				// create new message of the post which id = <:id>
-				post.POST("/:id", nil)
+				post.POST("/:id", ReviewPost)
 				// delete post which id = <:id>
-				post.DELETE("/:id", nil)
+				post.DELETE("/:id", DeletePost)
 
 			}
 
