@@ -58,16 +58,16 @@ type Node struct { //trie树节点
 	len  int
 }
 
-type AC_automaton struct { //AC自动机
+type AcAutomaton struct { //AC自动机
 
 	root *Node
 }
 
-func (it *AC_automaton) init() { //初始化trie树根节点
+func (it *AcAutomaton) init() { //初始化trie树根节点
 	it.root = new(Node)
 }
 
-func (it *AC_automaton) insert(str string) { //往trie树插入匹配串
+func (it *AcAutomaton) insert(str string) { //往trie树插入匹配串
 	node := it.root
 	lim := len(str)
 	for i := 0; i < lim; i++ {
@@ -79,7 +79,7 @@ func (it *AC_automaton) insert(str string) { //往trie树插入匹配串
 	node.len = len(str)
 }
 
-func (it *AC_automaton) build() { //构建自动机
+func (it *AcAutomaton) build() { //构建自动机
 	var q []*Node
 	front, tear := 0, -1
 	node := it.root
@@ -106,7 +106,7 @@ func (it *AC_automaton) build() { //构建自动机
 	}
 }
 
-func replace(str1, str2 string) string { //*
+func replace(str1, str2, str3 string) string { //*
 	var str []byte
 	lim := len(str1)
 	for i := 0; i < lim; {
@@ -122,10 +122,20 @@ func replace(str1, str2 string) string { //*
 			i++
 		}
 	}
-	return string(str)
+	var res []byte
+	replacestring := []byte(str3)
+	lim = len(str)
+	for i := 0; i < lim; i++ {
+		if str[i] == '*' {
+			res = append(res, replacestring...)
+		} else {
+			res = append(res, str[i])
+		}
+	}
+	return string(res)
 }
 
-func (it *AC_automaton) Check(str string) bool { //检查是否存在敏感词
+func (it *AcAutomaton) Check(str string) bool { //检查是否存在敏感词
 	node := it.root
 	lim := len(str)
 	for i := 0; i < lim; i++ {
@@ -137,7 +147,7 @@ func (it *AC_automaton) Check(str string) bool { //检查是否存在敏感词
 	return false
 }
 
-func (it *AC_automaton) Replace(str string) string { //消除敏感词
+func (it *AcAutomaton) Replace(str, replacestring string) string { //消除敏感词
 	byte_str := []byte(str)
 	node := it.root
 	var tag []int
@@ -155,21 +165,21 @@ func (it *AC_automaton) Replace(str string) string { //消除敏感词
 			j--
 		}
 	}
-	return replace(string(byte_str), str)
+	return replace(string(byte_str), str, replacestring)
 }
 
-func (it *AC_automaton)IsSensitive(str string) bool{
+func (it *AcAutomaton) IsSensitive(str string) bool {
 	return it.Check(str)
 }
 
-func (it *AC_automaton)ReplaceSensitiveWord(str string) string{
-	return it.Replace(str)
+func (it *AcAutomaton) ReplaceSensitiveWord(str string, replacestring string) string {
+	return it.Replace(str, replacestring)
 }
 
-func (it *AC_automaton) readSensitiveWord() []string {
-	f, err := os.Open("Fuever/resources/xxx.txt")
+func (it *AcAutomaton) readSensitiveWord() []string {
+	f, err := os.Open("../../resource/广告.txt")
 	if err != nil {
-		// TODO
+		panic(err)
 	}
 	defer f.Close()
 	b, err := ioutil.ReadAll(f)
@@ -178,10 +188,10 @@ func (it *AC_automaton) readSensitiveWord() []string {
 	return strings.Split(str, "\n")
 }
 
-func (it *AC_automaton) InitFilter() error {
+func (it *AcAutomaton) InitFilter() error {
 	strs := it.readSensitiveWord()
 	it.init()
-	for _,str := range strs{
+	for _, str := range strs {
 		it.insert(str)
 	}
 	it.build()
