@@ -2,15 +2,6 @@
 
 ## TODO
 
-- [ ] 我也不知道为什么要多加一层的ORM封装
-    - [x] admin
-    - [x] user
-    - [x] anniversary
-    - [x] class
-    - [x] message
-    - [x] post
-    - [x] new
-
 ## 这个该叫什么文档？
 
 ##### 写给协作者
