@@ -3,7 +3,7 @@ package sensitive
 import "testing"
 
 func TestFilter(t *testing.T) {
-	filter := AcAutomaton{}
+	filter := ForceMatchFilter{}
 	err := filter.InitFilter()
 	if err != nil {
 		t.Error(err)
@@ -14,8 +14,8 @@ func TestFilter(t *testing.T) {
 		t.Failed()
 	}
 
-	str := filter.ReplaceSensitiveWord("测试QQ", "哈")
-	if str != "测试哈哈" {
+	str := filter.ReplaceSensitiveWord("测试QQ", "*")
+	if str != "测试**" {
 		t.Failed()
 	}
 }
