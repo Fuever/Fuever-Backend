@@ -21,7 +21,9 @@ func (it *ForceMatchFilter) IsSensitive(Text string) bool {
 
 func (it *ForceMatchFilter) ReplaceSensitiveWord(Text string, ReplaceString string) string {
 	for _, SensitiveWord := range it.SensitiveWords { //替换敏感词
-		strings.Replace(Text, SensitiveWord, ReplaceString, -1)
+		if len(SensitiveWord) != 0 {
+			Text = strings.Replace(Text, SensitiveWord, ReplaceString, -1)
+		}
 	}
 	return Text
 }
@@ -37,7 +39,7 @@ func (it *ForceMatchFilter) readSensitiveWord() []string {
 func (it *ForceMatchFilter) InitFilter() error {
 	it.SensitiveWords = it.readSensitiveWord()          //初始化敏感词数组
 	sort.Slice(it.SensitiveWords, func(i, j int) bool { //按照敏感词长度降序排列
-		return len(it.SensitiveWords[i]) > len(it.SensitiveWords[j])
+		return len(it.SensitiveWords[i]) < len(it.SensitiveWords[j])
 	})
 	return nil
 }
