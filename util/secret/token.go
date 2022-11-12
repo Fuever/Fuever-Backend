@@ -2,7 +2,7 @@ package secret
 
 import (
 	"context"
-	"crypto/md5"
+	"crypto/sha512"
 	"encoding/hex"
 	"github.com/go-redis/redis/v8"
 	"log"
@@ -42,7 +42,7 @@ func Authentication(userID int, token string) bool {
 	userIDString := strconv.Itoa(userID)
 	realToken, err := redisClient.Get(ctx, userIDString).Result()
 	if err != nil {
-		log.Println(err)
+		// userID 对应的Token不存在
 		return false
 	}
 	// 比较token是否正确
@@ -67,7 +67,7 @@ func generateToken(userID int) string {
 	s2 := string(rune(userID))
 	s := s1 + s2
 	for i := 0; i < 3; i++ {
-		m := md5.New()
+		m := sha512.New()
 		m.Write([]byte(s + secretKey))
 		s = hex.EncodeToString(m.Sum(nil))
 	}
