@@ -7,9 +7,10 @@ import (
 type ImageType = int
 
 const (
-	USER_AVATAR ImageType = iota
-	NEW_COVER
-	ANNIVERSARY_COVER
+	UserAvatar ImageType = iota
+	NewCover
+	AnniversaryCover
+	GalleryCover
 )
 
 type ImageStoreManager interface {
@@ -25,8 +26,4 @@ type ImageStoreManager interface {
 	// 这边返回的可能是本地路径
 	// 也可能是一个http地址
 	GetImagePath(tpe ImageType, id int) string
-}
-
-func main() {
-
 }
