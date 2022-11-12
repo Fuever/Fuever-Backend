@@ -1,4 +1,4 @@
-package token
+package secret
 
 import (
 	"context"
@@ -74,7 +74,8 @@ func generateToken(userID int) string {
 	return s
 }
 
-func init() {
+// InitTokenCache 初始化redis连接
+func InitTokenCache() {
 	redisClient = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",

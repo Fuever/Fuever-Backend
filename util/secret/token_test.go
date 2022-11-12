@@ -1,4 +1,4 @@
-package token
+package secret
 
 import (
 	"github.com/stretchr/testify/assert"
