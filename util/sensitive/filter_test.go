@@ -1,6 +1,8 @@
 package sensitive
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestFilter(t *testing.T) {
 	filter := ForceMatchFilter{}
@@ -8,7 +10,6 @@ func TestFilter(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-
 	res := filter.IsSensitive("QQ")
 	if !res {
 		t.Failed()

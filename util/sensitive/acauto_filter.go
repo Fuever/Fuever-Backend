@@ -1,10 +1,6 @@
 package sensitive
 
-import (
-	"io/ioutil"
-	"os"
-	"strings"
-)
+import "Fuever/resource"
 
 type Node struct { //trie树节点
 
@@ -102,8 +98,8 @@ func (it *AcAutomaton) Check(str string) bool { //检查是否存在敏感词
 	return false
 }
 
-func (it *AcAutomaton) Replace(str, replacestring string) string { //消除敏感词
-	byte_str := []byte(str)
+func (it *AcAutomaton) Replace(str, replaceString string) string { //消除敏感词
+	byteStr := []byte(str)
 	node := it.root
 	var tag []int
 	lim := len(str)
@@ -116,37 +112,29 @@ func (it *AcAutomaton) Replace(str, replacestring string) string { //消除敏�
 			j = tag[i]
 		}
 		if j != 0 {
-			byte_str[i] = '*'
+			byteStr[i] = '*'
 			j--
 		}
 	}
-	return replace(string(byte_str), str, replacestring)
+	return replace(string(byteStr), str, replaceString)
 }
 
 func (it *AcAutomaton) IsSensitive(str string) bool {
 	return it.Check(str)
 }
 
-func (it *AcAutomaton) ReplaceSensitiveWord(str string, replacestring string) string {
-	return it.Replace(str, replacestring)
+func (it *AcAutomaton) ReplaceSensitiveWord(str string, replaceString string) string {
+	return it.Replace(str, replaceString)
 }
 
 func (it *AcAutomaton) readSensitiveWord() []string {
-	f, err := os.Open("../../resource/广告.txt")
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-	b, err := ioutil.ReadAll(f)
-	// err
-	str := string(b)
-	return strings.Split(str, "\n")
+	return resource.SensitiveWords()
 }
 
 func (it *AcAutomaton) InitFilter() error {
-	strs := it.readSensitiveWord()
+	strArr := it.readSensitiveWord()
 	it.init()
-	for _, str := range strs {
+	for _, str := range strArr {
 		it.insert(str)
 	}
 	it.build()
