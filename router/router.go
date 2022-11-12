@@ -8,7 +8,7 @@ func InitRoute(g *gin.Engine) {
 
 	api := g.Group("/api")
 	{
-		auth := api.Group("/secret", loginCheck)
+		auth := api.Group("/token", loginCheck)
 		{
 			user := auth.Group("/user", nil)
 			{
