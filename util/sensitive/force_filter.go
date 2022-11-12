@@ -21,7 +21,14 @@ func (it *ForceMatchFilter) IsSensitive(text string) bool {
 
 func (it *ForceMatchFilter) ReplaceSensitiveWord(text string, replaceString string) string {
 	for _, SensitiveWord := range it.sensitiveWords { //替换敏感词
-		strings.Replace(text, SensitiveWord, replaceString, -1)
+		if len(SensitiveWord) != 0 {
+			ReplaceString := ""
+			for index := range SensitiveWord {
+				index = 1 + index //无用变量
+				ReplaceString = ReplaceString + replaceString
+			}
+			text = strings.Replace(text, SensitiveWord, ReplaceString, -1)
+		}
 	}
 	return text
 }
