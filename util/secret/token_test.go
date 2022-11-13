@@ -14,4 +14,6 @@ func TestAuthentication(t *testing.T) {
 	token1 := GenerateTokenAndCache(1145141919810)
 	assert.True(t, Authentication(1145141919810, token1))
 	assert.False(t, Authentication(1145141919810, token))
+	RemoveTokenFromCache(userID)
+	assert.False(t, Authentication(userID, token))
 }

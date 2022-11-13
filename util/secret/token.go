@@ -74,6 +74,10 @@ func generateToken(userID int) string {
 	return s
 }
 
+func RemoveTokenFromCache(userID int) {
+	redisClient.Del(ctx, strconv.Itoa(userID))
+}
+
 // InitTokenCache 初始化redis连接
 func InitTokenCache() {
 	redisClient = redis.NewClient(&redis.Options{
