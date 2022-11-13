@@ -7,7 +7,7 @@ type User struct {
 	Password     string `gorm:"varchar(64);not null"`
 	Nickname     string `gorm:"index;varchar(32)"`
 	Avatar       string `gorm:"varchar(64)"`
-	StudentID    int    `gorm:"column:student_id;index"` // 这地方加索引好像会比较好 但是问题在于不应该为空
+	StudentID    int    `gorm:"column:student_id;uniqueIndex"` // 这地方加索引好像会比较好 但是问题在于不应该为空
 	Phone        int    `gorm:"uniqueIndex"`
 	Gender       bool
 	Age          int
