@@ -1,10 +1,8 @@
 package middleware
 
 import (
-	"Fuever/util/secret"
+	"Fuever/service"
 	"github.com/gin-gonic/gin"
-	"strconv"
-	"strings"
 )
 
 func failedResponse(code int, msg string) gin.H {
@@ -17,25 +15,17 @@ func failedResponse(code int, msg string) gin.H {
 
 func Auth(ctx *gin.Context) {
 	idWithTokenString := ctx.GetHeader("Authorization")
-	if idWithTokenString == "" {
-		ctx.AbortWithStatusJSON(200, failedResponse(40001, "without authorization"))
+	if isLogin, userID := service.Authentication(idWithTokenString); isLogin {
+		// 如果鉴权成功
+		// 向后文提供userID
+		// 注意 如果过了验证就信任用户传来的ID
+		// 会出现token和实际请求的userID不一致的情况
+		// userID请从ctx中获取 而不是在请求体中获取
+		// 最好是能来一发assert(userID, requestUserID)
+		ctx.Set("userID", userID)
 		return
-	}
-	arr := strings.Split(idWithTokenString, "@")
-	if len(arr) < 2 {
-		ctx.AbortWithStatusJSON(200, failedResponse(40001, "illegal token"))
-		return
-	}
-	userID, err := strconv.Atoi(arr[0])
-	if err != nil {
-		ctx.AbortWithStatusJSON(200, failedResponse(40001, "illegal token"))
-		return
-	}
-	token := arr[1]
-	// key不存在或者已经过期
-	if !secret.Authentication(userID, token) {
+	} else {
 		ctx.AbortWithStatusJSON(200, failedResponse(40001, "user not in login status"))
 		return
 	}
-	ctx.Set("userID", userID)
 }
