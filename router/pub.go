@@ -2,6 +2,7 @@ package router
 
 import (
 	"Fuever/model"
+	. "Fuever/router/status"
 	"Fuever/service"
 	"net/http"
 	"strconv"
@@ -9,11 +10,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type RegisterUserInfo struct {
+	Username        string `json:"username" binding:"required"`
+	Password        string `json:"password" binding:"required"`
+	CaptchaID       string `json:"captchaId" binding:"required"`
+	CaptchaCode     string `json:"captchaCode" binding:"required"`
+	EmailVerifyCode string `json:"verifyCode" binding:"required"`
+}
 type UserInfo struct {
-	Username  string `json:"username" binding:"required"`
-	Password  string `json:"password" binding:"required"`
-	CaptchaID string `json:"captchaid binding:"required`
-	AuthCode  string `json:"authcode" binding:"required"`
+	Username    string `json:"username" binding:"required"`
+	Password    string `json:"password" binding:"required"`
+	CaptchaID   string `json:"captchaId" binding:"required"`
+	CaptchaCode string `json:"captchaCode" binding:"required"`
 }
 
 func ReponseWrapper(c *gin.Context, code int, msg string, data *gin.H) {
@@ -26,15 +34,19 @@ func ReponseWrapper(c *gin.Context, code int, msg string, data *gin.H) {
 
 // ! usage: <img src="data:image/png;base64,${imageStr}"/>
 type img struct {
-	id     string `json:"captchaid" binding:"required"`
-	imgstr string `json:"imgstr" binding:"required"`
+	Id     string `json:"captchaId" binding:"required"`
+	Imgstr string `json:"imgStr" binding:"required"`
 }
 
 func GenerateAuthcode(c *gin.Context) {
 	id, imgstr, _ := service.MakeCaptcha()
 	ni := img{}
-	ni.id = id
-	ni.imgstr = imgstr
+	ni.Id = id
+	ni.Imgstr = imgstr
+	// ni := gin.H{
+	// 	"id":     id,
+	// 	"imgstr": imgstr,
+	// }
 	c.JSON(http.StatusOK, gin.H{
 		"code": FU_StatusOK,
 		"msg":  "usage: <img src=\"data:image/png;base64,${imageStr}\"/>",
@@ -43,7 +55,7 @@ func GenerateAuthcode(c *gin.Context) {
 }
 
 func Register(c *gin.Context) {
-	ui := UserInfo{}
+	ui := RegisterUserInfo{}
 	if err := c.ShouldBindJSON(&ui); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": FU_ReqNotJson,
@@ -51,14 +63,15 @@ func Register(c *gin.Context) {
 			"data": nil,
 		})
 	}
-	if err := ui.AuthCode; err != "" {
+	if err := ui.CaptchaCode; err != "" {
 		c.JSON(http.StatusOK, gin.H{
 			"code": FU_BadCredentials,
 			"msg":  "Invalid credentials",
 			"data": nil,
 		})
 	}
-	if flag := service.VerifyCaptcha(ui.CaptchaID, ui.AuthCode); flag == true {
+	// ! todo:add email verify function,field: RegisterUserInfo.EmailVerifyCode
+	if flag := service.VerifyCaptcha(ui.CaptchaID, ui.CaptchaCode); flag == true {
 		newuser := model.User{}
 		newuser.Nickname = ui.Username
 		newuser.Password = ui.Password
@@ -89,7 +102,7 @@ func Login(c *gin.Context) {
 			"error": "The request body is not json-formatted",
 		})
 	}
-	if err := ui.AuthCode; err != "" {
+	if err := ui.CaptchaCode; err != "" {
 		c.JSON(http.StatusOK, gin.H{
 			"code":  FU_BadCredentials,
 			"error": "Invalid credentials",
@@ -108,7 +121,7 @@ func LoginAdmin(c *gin.Context) {
 			"msg":  "The request body is not json-formatted",
 		})
 	}
-	if err := ui.AuthCode; err != "" {
+	if err := ui.CaptchaCode; err != "" {
 		c.JSON(http.StatusOK, gin.H{
 			"code": FU_BadCredentials,
 			"msg":  "Invalid credentials",

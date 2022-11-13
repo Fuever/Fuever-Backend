@@ -1,6 +1,10 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	. "Fuever/router/auth"
+
+	"github.com/gin-gonic/gin"
+)
 
 func InitRoute(g *gin.Engine) {
 
@@ -8,7 +12,7 @@ func InitRoute(g *gin.Engine) {
 
 	api := g.Group("/api")
 	{
-		auth := api.Group("/secret", loginCheck)
+		auth := api.Group("/auth", loginCheck)
 		{
 			user := auth.Group("/user", nil)
 			{

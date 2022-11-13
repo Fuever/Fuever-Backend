@@ -5,7 +5,7 @@ type New struct {
 	AuthorID   int    `gorm:"column:author_id;not null;index"`
 	Title      string `gorm:"varchar(128);not null"` // 我觉得这个地方要建一个索引啊
 	Content    string `gorm:"text;not null"`
-	CreateTime int64  `gorm:"not null"`
+	CreateTime int64  `gorm:"autoCreateTime"`
 	Cover      string `gorm:"varchar(128)"` // 新闻的封面
 }
 
@@ -53,7 +53,7 @@ func GetNewsByAuthorIDWIthOffsetLimit(authorID int, offset int, limit int) ([]*N
 }
 
 func UpdateNew(_new *New) error {
-	err := db.Where("id = ?", _new.ID).Updates(_new).Error
+	err := db.Omit("ID").Where("id = ?", _new.ID).Updates(_new).Error
 	if err != nil {
 		return err
 	}

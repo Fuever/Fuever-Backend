@@ -1,4 +1,4 @@
-package router
+package status
 
 const (
 	FU_StatusOK          = 200

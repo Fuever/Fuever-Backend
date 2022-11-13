@@ -4,11 +4,11 @@ type Post struct {
 	ID          int    `gorm:"primaryKey;autoIncrement"`
 	AuthorID    int    `gorm:"column:author_id;index;not null"`
 	Title       string `gorm:"varchar(128);not null"`
-	CreatedTime int64  `gorm:"not null"`
+	CreatedTime int64  `gorm:"autoCreateTime"`
 	UpdatedTime int64  `gorm:"not null"`
 	State       int    `gorm:"not null"`
 	BlockID     int    `gorm:"column:block_id;not null"`
-	IsLock      bool   `gorm:"column:is_lock"`
+	IsLock      bool   `gorm:"column:is_lock;default:0"`
 }
 
 const (
@@ -48,7 +48,7 @@ func GetPostsByAuthorIDWIthOffsetLimit(authorID int, limit int) ([]*Post, error)
 }
 
 func UpdatePost(post *Post) error {
-	err := db.Where("id = ?", post.ID).Updates(post).Error
+	err := db.Omit("ID").Where("id = ?", post.ID).Updates(post).Error
 	if err != nil {
 		return err
 	}
