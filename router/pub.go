@@ -13,7 +13,7 @@ import (
 type RegisterUserInfo struct {
 	Username        string `json:"username" binding:"required"`
 	Password        string `json:"password" binding:"required"`
-	CaptchaID       string `json:"captcha_d" binding:"required"`
+	CaptchaID       string `json:"captcha_id" binding:"required"`
 	CaptchaCode     string `json:"captcha_code" binding:"required"`
 	EmailVerifyCode string `json:"verify_code" binding:"required"`
 }
@@ -35,7 +35,7 @@ func ReponseWrapper(c *gin.Context, code int, msg string, data *gin.H) {
 // ! usage: <img src="data:image/png;base64,${imageStr}"/>
 type img struct {
 	Id     string `json:"captchaId" binding:"required"`
-	Imgstr string `json:"imgStr" binding:"required"`
+	Imgstr string `json:"img_str" binding:"required"`
 }
 
 func GenerateAuthcode(c *gin.Context) {
@@ -52,6 +52,17 @@ func GenerateAuthcode(c *gin.Context) {
 		"msg":  "usage: <img src=\"data:image/png;base64,${imageStr}\"/>",
 		"data": ni,
 	})
+}
+
+func VerifyEmail(c *gin.Context) {
+	mail := c.PostForm("email")
+	// TODO
+	if mail == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"code": FU_StatusOK,
+			"msg":  "ok",
+		})
+	}
 }
 
 func Register(c *gin.Context) {
