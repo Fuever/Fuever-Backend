@@ -10,7 +10,7 @@ import (
 )
 
 type AddAnnivInfo struct {
-	AdminID  int    `json:"adminID"`
+	AdminID  int    `json:"admin_id"`
 	Title    string `json:"title"`
 	Content  string `json:"content"`
 	Start    int64  `json:"start"`

@@ -14,13 +14,13 @@ type alterUserInfo struct {
 	Username     string `json:"username"`
 	Nickname     string `json:"nickname"`
 	Avatar       string `json:"avator"`
-	StudentID    int    `json:"studentID"`
+	StudentID    int    `json:"student_id"`
 	Phone        int    `json:"phone"`
 	Gender       bool   `json:"gender"`
 	Age          int    `json:"age"`
 	Job          string `json:"job"`
-	EntranceTime int64  `json:"entranceTime"`
-	ClassID      int    `json:"classID"`
+	EntranceTime int64  `json:"entrance_time"`
+	ClassID      int    `json:"class_id"`
 	Residence    string `json:"residence"`
 }
 
@@ -102,7 +102,7 @@ func AddUser(c *gin.Context) {
 // }
 
 func DelUser(c *gin.Context) {
-	userId, _ := strconv.Atoi(c.Query("userId"))
+	userId, _ := strconv.Atoi(c.Query("user_id"))
 	if err := model.DeleteUserByID(userId); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": FU_DBError,

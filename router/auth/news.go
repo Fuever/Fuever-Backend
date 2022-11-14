@@ -10,7 +10,7 @@ import (
 )
 
 type AddNewInfo struct {
-	AuthorID int    `json:"adminID"`
+	AuthorID int    `json:"admin_id"`
 	Title    string `json:"title"`
 	Content  string `json:"content"`
 	Cover    string `json:"cover"`

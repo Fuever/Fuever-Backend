@@ -13,15 +13,15 @@ import (
 type RegisterUserInfo struct {
 	Username        string `json:"username" binding:"required"`
 	Password        string `json:"password" binding:"required"`
-	CaptchaID       string `json:"captchaId" binding:"required"`
-	CaptchaCode     string `json:"captchaCode" binding:"required"`
-	EmailVerifyCode string `json:"verifyCode" binding:"required"`
+	CaptchaID       string `json:"captcha_d" binding:"required"`
+	CaptchaCode     string `json:"captcha_code" binding:"required"`
+	EmailVerifyCode string `json:"verify_code" binding:"required"`
 }
 type UserInfo struct {
 	Username    string `json:"username" binding:"required"`
 	Password    string `json:"password" binding:"required"`
-	CaptchaID   string `json:"captchaId" binding:"required"`
-	CaptchaCode string `json:"captchaCode" binding:"required"`
+	CaptchaID   string `json:"captcha_id" binding:"required"`
+	CaptchaCode string `json:"captcha_code" binding:"required"`
 }
 
 func ReponseWrapper(c *gin.Context, code int, msg string, data *gin.H) {

@@ -10,18 +10,18 @@ import (
 )
 
 type JsonPost struct {
-	AuthorID int    `json:"authorID"`
+	AuthorID int    `json:"author_id"`
 	Title    string `json:"title"`
-	BlockID  int    `json:"blockID"`
+	BlockID  int    `json:"block_id"`
 }
 type JsonReview struct {
-	AuthorID int    `json:"authorID"`
+	AuthorID int    `json:"author_id"`
 	Content  string `json:"content"`
-	PostID   int    `json:"postID"`
+	PostID   int    `json:"post_id"`
 }
 
 func GetPosts(c *gin.Context) {
-	blockId, _ := strconv.Atoi(c.DefaultQuery("blockId", "0"))
+	blockId, _ := strconv.Atoi(c.DefaultQuery("block_d", "0"))
 	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "10"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	if posts, err := model.GetNormalPostsWithOffsetLimit(blockId, offset, limit); err != nil {
