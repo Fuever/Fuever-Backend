@@ -28,6 +28,11 @@ func TestAutentication(t *testing.T) {
 	//	}
 	//	fmt.Println("----------------")
 	//}
+	//for i := 0; i < 50; i++ {
+	//	rand.Seed(time.Now().UnixNano())
+	//	x := rand.Int()
+	//	fmt.Println(x)
+	//}
 	studentMessageArray := resource.StudentMessages() //获取学生信息
 	vistor := RandStudent(studentMessageArray)        //随机生成学生
 	fmt.Println("待验证访客")
