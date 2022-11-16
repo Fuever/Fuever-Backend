@@ -18,7 +18,10 @@ type StudentMessage struct {
 //go:embed stu.dat
 var studentMessageString string
 
-func StudentMessages() []*StudentMessage {
+var studentMessageArray []*StudentMessage
+var dormitoryMessageArray map[int][]*StudentMessage //以宿舍划分学生
+
+func initStudentMessageArray() {
 	lines := strings.Split(studentMessageString, "\n")
 	messages := make([]*StudentMessage, len(lines))
 	for i := 0; i < len(lines); i++ {
@@ -44,5 +47,29 @@ func StudentMessages() []*StudentMessage {
 			Bed:       bedNumber,
 		}
 	}
-	return messages
+	studentMessageArray = messages
+}
+
+func initDormitoryMessageArray() {
+	if studentMessageArray == nil { //保证学生信息已初始化
+		initStudentMessageArray()
+	}
+	dormitoryMessageArray = make(map[int][]*StudentMessage) //初始化map
+	for _, student := range studentMessageArray {
+		dormitoryMessageArray[student.Dormitory] = append(dormitoryMessageArray[student.Dormitory], student)
+	}
+}
+
+func StudentMessages() []*StudentMessage {
+	if studentMessageArray == nil {
+		initStudentMessageArray()
+	}
+	return studentMessageArray
+}
+
+func DormitoryMessages() map[int][]*StudentMessage {
+	if dormitoryMessageArray == nil {
+		initDormitoryMessageArray()
+	}
+	return dormitoryMessageArray
 }
