@@ -35,7 +35,7 @@ func InitDB() {
 		&Class{},
 		&Message{},
 		&Post{},
-		&New{},
+		&News{},
 		&Block{},
 	)
 	if err != nil {

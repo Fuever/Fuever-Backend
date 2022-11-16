@@ -28,9 +28,9 @@ func InitRoute(g *gin.Engine) {
 				admin.POST("/anniversary", AddAnniv)
 				admin.PUT("/anniversary", FixAnniv)
 				admin.DELETE("/anniversary", DelAnniv)
-				admin.POST("/news", AddNews)
-				admin.PUT("/news", FixNews)
-				admin.DELETE("/news", DelNews)
+				admin.POST("/news", CreateNews)
+				admin.PUT("/news", UpdateNews)
+				admin.DELETE("/news", DeleteNews)
 			}
 
 			// recommend alumnus api
@@ -64,7 +64,7 @@ func InitRoute(g *gin.Engine) {
 				user.GET("/captcha", GenerateAuthcode)
 				user.POST("/login", Login)
 				user.POST("/register", Register)
-				user.POST("/verify",VerifyEmail)
+				user.POST("/verify", VerifyEmail)
 			}
 
 			admin := api.Group("/admin")
@@ -74,8 +74,8 @@ func InitRoute(g *gin.Engine) {
 
 			news := api.Group("/news")
 			{
-				news.GET("/", GetOneNews)
-				news.POST("/", GetNews)
+				news.GET("", GetAllNews)
+				news.GET("/:id", GetSpecifyNews)
 			}
 
 			anniv := api.Group("/anniversary")

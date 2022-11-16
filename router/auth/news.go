@@ -24,13 +24,13 @@ func AddNews(c *gin.Context) {
 			"msg":  "The request body is not json-formatted",
 		})
 	} else {
-		newNew := model.New{
+		newNew := model.News{
 			AuthorID: new.AuthorID,
 			Title:    new.Title,
 			Content:  new.Content,
 			Cover:    new.Cover,
 		}
-		if err_ := model.CreateNew(&newNew); err_ != nil {
+		if err_ := model.CreateNews(&newNew); err_ != nil {
 			c.JSON(http.StatusOK, gin.H{
 				"code": FU_DBError,
 				"msg":  "could not create the news",
@@ -51,7 +51,7 @@ func FixNews(c *gin.Context) {
 			"msg":  "The request body is not json-formatted",
 		})
 	} else {
-		alterNew := model.New{
+		alterNew := model.News{
 			AuthorID: alter.AuthorID,
 			Title:    alter.Title,
 			Content:  alter.Content,
