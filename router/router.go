@@ -78,10 +78,10 @@ func InitRoute(g *gin.Engine) {
 				news.GET("/:id", GetSpecifyNews)
 			}
 
-			anniv := api.Group("/anniversary")
+			anniv := api.Group("/anniv")
 			{
-				anniv.GET("/", GetOneAnniv)
-				anniv.POST("/", GetAnniv)
+				anniv.GET("/", GetAllAnniversaries)
+				anniv.GET("/:id", GetSpecifyAnniversary)
 			}
 
 		}
