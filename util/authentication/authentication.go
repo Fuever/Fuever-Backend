@@ -20,19 +20,19 @@ func Count(array []*resource.StudentMessage, student resource.StudentMessage) bo
 	return false
 }
 
-func generateAuthenticationList(vistor resource.StudentMessage) []*resource.StudentMessage {
+func GenerateAuthenticationList(vistor resource.StudentMessage) []*resource.StudentMessage {
 	studentMessageArray := resource.StudentMessages()     //获取学生信息
 	dormitoryMessageArray := resource.DormitoryMessages() //获取宿舍信息
 	var randomList []*resource.StudentMessage             //随机学生序列，共9位
 	//处理同宿舍随机
-	roomieList := dormitoryMessageArray[vistor.Dormitory] //舍友列表
-	numberOfRoomie := len(roomieList)                     //宿舍人数
-	countInside := RandInt(numberOfRoomie)                //随机同一宿舍内的舍友数量：0～3
-	for i := 0; i < countInside; {
-		index := RandInt(numberOfRoomie)
-		if *roomieList[index] != vistor && Count(randomList, *roomieList[index]) { //避免重复加入信息
-			randomList = append(randomList, roomieList[index])
-			i++ //成功加入随机列表
+	key := resource.GenerateHash(vistor)
+	roomieList := dormitoryMessageArray[key]
+	numberOfRoomie := len(roomieList)      //宿舍人数
+	countInside := RandInt(numberOfRoomie) //随机同一宿舍内的舍友数量：0～3
+	for i, j := 0, 0; i < numberOfRoomie && j < countInside; i++ {
+		if *roomieList[i] != vistor { //避免加入验证者自身
+			randomList = append(randomList, roomieList[i])
+			j++ //成功加入随机列表
 		}
 	}
 	//处理不同宿舍随机
@@ -40,7 +40,7 @@ func generateAuthenticationList(vistor resource.StudentMessage) []*resource.Stud
 	numberOfStudent := len(studentMessageArray) //学生数量
 	for i := 0; i < countOutside; {
 		index := RandInt(numberOfStudent)
-		if *studentMessageArray[index] != vistor && Count(randomList, *studentMessageArray[index]) { //避免重复加入信息
+		if *studentMessageArray[index] != vistor && !Count(randomList, *studentMessageArray[index]) { //避免重复加入信息
 			randomList = append(randomList, studentMessageArray[index])
 			i++ //成功加入随机列表
 		}

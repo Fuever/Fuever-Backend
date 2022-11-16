@@ -19,7 +19,7 @@ type StudentMessage struct {
 var studentMessageString string
 
 var studentMessageArray []*StudentMessage
-var dormitoryMessageArray map[int][]*StudentMessage //以宿舍划分学生
+var dormitoryMessageArray map[string][]*StudentMessage //以宿舍划分学生
 
 func initStudentMessageArray() {
 	lines := strings.Split(studentMessageString, "\n")
@@ -50,13 +50,18 @@ func initStudentMessageArray() {
 	studentMessageArray = messages
 }
 
+func GenerateHash(student StudentMessage) string {
+	return strconv.Itoa(student.Building) + " " + strconv.Itoa(student.Dormitory)
+}
+
 func initDormitoryMessageArray() {
 	if studentMessageArray == nil { //保证学生信息已初始化
 		initStudentMessageArray()
 	}
-	dormitoryMessageArray = make(map[int][]*StudentMessage) //初始化map
+	dormitoryMessageArray = make(map[string][]*StudentMessage) //初始化map
 	for _, student := range studentMessageArray {
-		dormitoryMessageArray[student.Dormitory] = append(dormitoryMessageArray[student.Dormitory], student)
+		key := GenerateHash(*student)
+		dormitoryMessageArray[key] = append(dormitoryMessageArray[key], student)
 	}
 }
 
@@ -67,7 +72,7 @@ func StudentMessages() []*StudentMessage {
 	return studentMessageArray
 }
 
-func DormitoryMessages() map[int][]*StudentMessage {
+func DormitoryMessages() map[string][]*StudentMessage {
 	if dormitoryMessageArray == nil {
 		initDormitoryMessageArray()
 	}
