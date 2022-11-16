@@ -13,7 +13,8 @@ func failedResponse(code int, msg string) gin.H {
 	}
 }
 
-func Auth(ctx *gin.Context) {
+// UserAuth 针对需要用户登录接口
+func UserAuth(ctx *gin.Context) {
 	idWithTokenString := ctx.GetHeader("Authorization")
 	if isLogin, userID := service.Authentication(idWithTokenString); isLogin {
 		// 如果鉴权成功

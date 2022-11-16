@@ -13,7 +13,7 @@ import (
 type RegisterUserInfo struct {
 	Username        string `json:"username" binding:"required"`
 	Password        string `json:"password" binding:"required"`
-	CaptchaID       string `json:"captcha_id" binding:"required"`
+	CaptchaID       string `json:"cfile:///home/user/图片/Screenshot_20221116_110822.pngaptcha_id" binding:"required"`
 	CaptchaCode     string `json:"captcha_code" binding:"required"`
 	EmailVerifyCode string `json:"verify_code" binding:"required"`
 }
