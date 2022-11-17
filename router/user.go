@@ -13,7 +13,6 @@ type EmailVerifyCodeRequest struct {
 	VerifyID   string `json:"verify_id" binding:"required"`
 	VerifyCode string `json:"verify_code" binding:"required"`
 	Mailbox    string `json:"mailbox" binding:"required"`
-	Password   string `json:"password" binding:"required"`
 }
 
 func SendEmailVerifyCode(ctx *gin.Context) {
@@ -32,15 +31,51 @@ func SendEmailVerifyCode(ctx *gin.Context) {
 		ctx.JSON(http.StatusConflict, gin.H{"msg": "user exist"})
 		return
 	}
-	// TODO 邮箱验证
+	err = service.SendVerifyCodeToUserMailbox(req.Mailbox)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
 	ctx.JSON(http.StatusOK, gin.H{})
 	return
 }
 
 type RegisterRequest struct {
+	Mailbox        string `json:"mailbox" binding:"required"`
+	Password       string `json:"password" binding:"required"`
+	MailVerifyCode int    `json:"mail_verify_code" binding:"required"`
 }
 
 func Register(ctx *gin.Context) {
+	req := &RegisterRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	if !service.VerifyCode(req.Mailbox, req.MailVerifyCode) {
+		// 邮箱验证码不正确
+		ctx.JSON(http.StatusForbidden, gin.H{})
+		return
+	}
+	user := &model.User{
+		Mail:     req.Mailbox,
+		Password: req.Password, // TODO 加密
+	}
+	_, err := model.GetUserByMailbox(req.Mailbox)
+	if err != nil {
+		// 用户已存在
+		ctx.JSON(http.StatusConflict, gin.H{})
+		return
+	}
+	err = model.CreateUser(user)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": user,
+	})
+	return
 }
 
 type LoginRequest struct {

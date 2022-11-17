@@ -1,5 +1,6 @@
 package mail
 
-func SendEmail() {
-
+func SendEmail(mailbox string, content string) error {
+	// TODO implement me!
+	return nil
 }
