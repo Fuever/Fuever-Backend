@@ -3,8 +3,8 @@ package model
 type User struct {
 	ID           int    `gorm:"primaryKey;autoIncrement;check: id < 2000000000"`
 	Mail         string `gorm:"uniqueIndex;varchar(64);not null"`
-	Username     string `gorm:"index;varchar(32);not null"`
 	Password     string `gorm:"varchar(64);not null"`
+	Username     string `gorm:"index;varchar(32);"` // 真名需要验证
 	Nickname     string `gorm:"index;varchar(32)"`
 	Avatar       string `gorm:"varchar(64)"`
 	StudentID    int    `gorm:"column:student_id;uniqueIndex"` // 这地方加索引好像会比较好 但是问题在于不应该为空
@@ -30,9 +30,18 @@ func CreateUser(user *User) error {
 	return nil
 }
 
+func GetUserByMailbox(mailbox string) (*User, error) {
+	user := &User{Mail: mailbox}
+	err := db.First(user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 func GetUserByID(id int) (*User, error) {
 	user := &User{ID: id}
-	err := db.First(user).Error
+	err := db.Select("ID", "Password").First(user).Error
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +50,7 @@ func GetUserByID(id int) (*User, error) {
 
 func GetUsersByStudentID(studentID int) ([]*User, error) {
 	user := make([]*User, 0)
-	err := db.Where("student_id = ?", studentID).Find(&user).Error
+	err := db.Select("ID", "Nickname", "Avatar", "StudentID", "Gender").Where("student_id = ?", studentID).Find(&user).Error
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +58,7 @@ func GetUsersByStudentID(studentID int) ([]*User, error) {
 }
 
 func UpdateUser(user *User) error {
-	err := db.Where("id = ?", user.ID).Updates(user).Error
+	err := db.Omit("ID").Where("id = ?", user.ID).Updates(user).Error
 	if err != nil {
 		return err
 	}

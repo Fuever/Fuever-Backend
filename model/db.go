@@ -35,10 +35,23 @@ func InitDB() {
 		&Class{},
 		&Message{},
 		&Post{},
-		&New{},
+		&News{},
 		&Block{},
 	)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
+	}
+	// 查询自增序列 如果已有记录则不设置初值
+	rows, err := db.Raw("SELECT last_value from admins_id_seq;").Rows()
+	rows.Next()
+	lastValue := 1
+	rows.Scan(&lastValue)
+	// 没有记录就把自增序列初始值置为2000000000
+	// 通过区分id的值来区分普通用户和管理员
+	if lastValue == 1 {
+		db.Exec("SELECT SETVAL('admins_id_seq', 2000000000, false)")
+	}
+	if err != nil {
+		panic(err)
 	}
 }

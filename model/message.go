@@ -5,7 +5,7 @@ type Message struct {
 	AuthorID    int    `gorm:"column:author_id;index;not null"`
 	Content     string `gorm:"text;not null"`
 	PostID      int    `gorm:"column:post_id;index;not null"`
-	CreatedTime int64  `gorm:"not null"`
+	CreatedTime int64  `gorm:"autoCreateTime"`
 }
 
 func CreateMessage(message *Message) error {

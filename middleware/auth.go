@@ -13,7 +13,8 @@ func failedResponse(code int, msg string) gin.H {
 	}
 }
 
-func Auth(ctx *gin.Context) {
+// UserAuth 针对需要用户登录接口
+func UserAuth(ctx *gin.Context) {
 	idWithTokenString := ctx.GetHeader("Authorization")
 	if isLogin, userID := service.Authentication(idWithTokenString); isLogin {
 		// 如果鉴权成功
@@ -23,6 +24,24 @@ func Auth(ctx *gin.Context) {
 		// userID请从ctx中获取 而不是在请求体中获取
 		// 最好是能来一发assert(userID, requestUserID)
 		ctx.Set("userID", userID)
+		return
+	} else {
+		ctx.AbortWithStatusJSON(200, failedResponse(40001, "user not in login status"))
+		return
+	}
+}
+
+// AdminAuth 针对需要管理员的登录接口
+func AdminAuth(ctx *gin.Context) {
+	idWithTokenString := ctx.GetHeader("Authorization")
+	if isLogin, adminID := service.Authentication(idWithTokenString); isLogin {
+		if adminID < 2000000000 {
+			// 虽然查得到TOKEN
+			// 但是是普通用户
+			// 拒绝请求
+			ctx.AbortWithStatusJSON(200, failedResponse(40001, "user not in login status"))
+		}
+		ctx.Set("adminID", adminID)
 		return
 	} else {
 		ctx.AbortWithStatusJSON(200, failedResponse(40001, "user not in login status"))

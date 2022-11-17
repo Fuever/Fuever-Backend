@@ -32,7 +32,7 @@ func GetAnniversaryByID(id int) (*Anniversary, error) {
 
 func GetAnniversariesWithOffsetLimit(offset int, limit int) ([]*Anniversary, error) {
 	anniversaries := make([]*Anniversary, 0)
-	err := db.Limit(limit).Offset(offset).Find(&anniversaries).Error
+	err := db.Select("ID", "AdminID", "Title", "Cover").Limit(limit).Offset(offset).Find(&anniversaries).Error
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func GetAnniversariesWithOffsetLimit(offset int, limit int) ([]*Anniversary, err
 
 func GetAnniversariesByAdminIDWIthOffsetLimit(adminID int, offset int, limit int) ([]*Anniversary, error) {
 	anniversaries := make([]*Anniversary, 0)
-	err := db.Limit(limit).Offset(offset).Where(&Anniversary{AdminID: adminID}).Find(&anniversaries).Error
+	err := db.Select("ID", "AdminID", "Title", "Cover").Limit(limit).Offset(offset).Where(&Anniversary{AdminID: adminID}).Find(&anniversaries).Error
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func GetAnniversariesByAdminIDWIthOffsetLimit(adminID int, offset int, limit int
 }
 
 func UpdateAnniversaryByID(anniversary *Anniversary) error {
-	err := db.Where("id = ?", anniversary.ID).Updates(anniversary).Error
+	err := db.Omit("ID").Where("id = ?", anniversary.ID).Updates(anniversary).Error
 	if err != nil {
 		return err
 	}

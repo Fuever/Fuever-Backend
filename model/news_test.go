@@ -10,21 +10,21 @@ import (
 // 一个个开事务再回滚很累人诶
 // 要写你自己写奥
 // 写完给你沏一壶昏睡红茶
-func TestNewCRUD(t *testing.T) {
+func TestNewsCRUD(t *testing.T) {
 	InitDB()
 	tx := db.Begin()
 	db = tx
 	tx.Begin()
 	for _, n := range newArray {
-		err := CreateNew(n)
+		err := CreateNews(n)
 		if err != nil {
 			t.Error(err)
 		}
 	}
-	news := make([]*New, 0)
+	news := make([]*News, 0)
 	tx.Find(&news)
 
-	{ // test CreateNew method
+	{ // test CreateNews method
 		for i := 0; i < len(newArray); i++ {
 			compareNew(t, newArray[i], news[i])
 		}
@@ -38,9 +38,9 @@ func TestNewCRUD(t *testing.T) {
 		assert.Equal(t, len(newsArray), 7)
 	}
 
-	{ // test GetNewByID method
+	{ // test GetNewsByID method
 		for i := 0; i < len(newArray); i++ {
-			_new, err := GetNewByID(newArray[i].ID)
+			_new, err := GetNewsByID(newArray[i].ID)
 			if err != nil {
 				t.Error(err)
 			}
@@ -55,7 +55,7 @@ func TestNewCRUD(t *testing.T) {
 			t.Error(err)
 		}
 		assert.Equal(t, len(newsWithAuthorIDFromDB), limit)
-		newsWithAuthorIDFromLiteral := make([]*New, 0)
+		newsWithAuthorIDFromLiteral := make([]*News, 0)
 		for _, n := range newArray {
 			if n.AuthorID == newArray[1].AuthorID {
 				newsWithAuthorIDFromLiteral = append(newsWithAuthorIDFromLiteral, n)
@@ -73,7 +73,7 @@ func TestNewCRUD(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		__new, err := GetNewByID(_new.ID)
+		__new, err := GetNewsByID(_new.ID)
 		if err != nil {
 			t.Error(err)
 		}
@@ -97,7 +97,7 @@ func TestNewCRUD(t *testing.T) {
 	tx.Rollback()
 }
 
-func compareNew(t *testing.T, new1 *New, new2 *New) {
+func compareNew(t *testing.T, new1 *News, new2 *News) {
 	assert.Equal(t, new1.ID, new2.ID)
 	assert.Equal(t, new1.AuthorID, new2.AuthorID)
 	assert.Equal(t, new1.Title, new2.Title)
@@ -108,7 +108,7 @@ func compareNew(t *testing.T, new1 *New, new2 *New) {
 	//assert.Equal(t, new1.CreateTime, new2.CreateTime)
 }
 
-var newArray = []*New{
+var newArray = []*News{
 	{
 		AuthorID: 114514,
 		Title:    "野兽先辈驾临福州大学下北泽学院",

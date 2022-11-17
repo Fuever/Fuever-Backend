@@ -24,7 +24,7 @@ func GetBlockByID(id int) (*Block, error) {
 }
 
 func UpdateBlock(block *Block) error {
-	err := db.Where("id = ?", block.ID).Updates(block).Error
+	err := db.Omit("ID").Where("id = ?", block.ID).Updates(block).Error
 	if err != nil {
 		return err
 	}

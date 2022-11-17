@@ -1,6 +1,8 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 func InitRoute(g *gin.Engine) {
 
@@ -21,12 +23,12 @@ func InitRoute(g *gin.Engine) {
 			admin := auth.Group("/admin", nil)
 			{
 				//TODO
-				admin.POST("/anniversary", nil)
-				admin.PUT("/anniversary", nil)
-				admin.DELETE("/anniversary", nil)
-				admin.POST("/news", nil)
-				admin.PUT("/news", nil)
-				admin.DELETE("/news", nil)
+				admin.POST("/anniversary", CreateAnniversary)
+				admin.PUT("/anniversary", UpdateAnniversary)
+				admin.DELETE("/anniversary", DeleteAnniversary)
+				admin.POST("/news", CreateNews)
+				admin.PUT("/news", UpdateNews)
+				admin.DELETE("/news", DeleteNews)
 			}
 
 			// recommend alumnus api
@@ -53,27 +55,31 @@ func InitRoute(g *gin.Engine) {
 
 		}
 
-		pub := api.Group("/pub", nil)
+		pub := api.Group("/pub")
 		{
 			user := pub.Group("/user")
 			{
-				user.POST("/login", nil)
-				user.POST("/register", nil)
+				user.GET("/captcha", Captcha)
+				user.POST("/login", Login)
+				user.POST("/register", Register)
+				user.POST("/verify", SendEmailVerifyCode)
 			}
 
-			admin := api.Group("/admin")
+			admin := pub.Group("/admin")
 			{
 				admin.POST("/login", nil)
 			}
 
-			news := api.Group("/news")
+			news := pub.Group("/news")
 			{
-				news.GET("/", nil)
+				news.GET("/", GetAllNews)
+				news.GET("/:id", GetSpecifyNews)
 			}
 
-			anniv := api.Group("/anniversary")
+			anniv := pub.Group("/anniv")
 			{
-				anniv.GET("/", nil)
+				anniv.GET("", GetAllAnniversaries)
+				anniv.GET("/:id", GetSpecifyAnniversary)
 			}
 
 		}

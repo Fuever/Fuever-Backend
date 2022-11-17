@@ -9,6 +9,15 @@ import (
 
 func main() {
 	model.InitDB()
+	model.CreateAnniversary(&model.Anniversary{
+		AdminID:  114514,
+		Title:    "???",
+		Content:  "!!!",
+		Start:    1919,
+		End:      810,
+		Location: "???",
+		Cover:    "???",
+	})
 	g := gin.Default()
 
 	router.InitRoute(g)
