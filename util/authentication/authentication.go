@@ -47,7 +47,7 @@ func GenerateAuthenticationList(vistor resource.StudentMessage) []*resource.Stud
 		}
 	}
 	//打乱随机序列
-	rand.Seed(time.Now().Unix())                   //以时间戳作为随机参数，保证结果随机
+	rand.Seed(time.Now().UnixNano())               //以时间戳作为随机参数，保证结果随机
 	rand.Shuffle(len(randomList), func(i, j int) { //随机打乱
 		randomList[i], randomList[j] = randomList[j], randomList[i]
 	})
