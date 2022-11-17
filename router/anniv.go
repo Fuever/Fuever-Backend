@@ -16,7 +16,7 @@ type GetAnniversaryRequest struct {
 // GetSpecifyAnniversary 无需认证
 func GetSpecifyAnniversary(ctx *gin.Context) {
 	req := &GetAnniversaryRequest{}
-	if err := ctx.ShouldBindJSON(req); err != nil {
+	if err := ctx.ShouldBindUri(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}

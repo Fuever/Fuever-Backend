@@ -1,8 +1,6 @@
 package router
 
 import (
-	. "Fuever/router/auth"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,18 +14,18 @@ func InitRoute(g *gin.Engine) {
 		{
 			user := auth.Group("/user", nil)
 			{
-				user.GET("/", GetUser)
-				user.POST("/", UpdateUser)
-				user.PUT("/", AddUser)
-				user.DELETE("/", DelUser)
+				user.GET("/", nil)
+				user.POST("/", nil)
+				user.PUT("/", nil)
+				user.DELETE("/", nil)
 			}
 
 			admin := auth.Group("/admin", nil)
 			{
 				//TODO
-				admin.POST("/anniversary", AddAnniv)
-				admin.PUT("/anniversary", FixAnniv)
-				admin.DELETE("/anniversary", DelAnniv)
+				admin.POST("/anniversary", CreateAnniversary)
+				admin.PUT("/anniversary", UpdateAnniversary)
+				admin.DELETE("/anniversary", DeleteAnniversary)
 				admin.POST("/news", CreateNews)
 				admin.PUT("/news", UpdateNews)
 				admin.DELETE("/news", DeleteNews)
@@ -42,16 +40,16 @@ func InitRoute(g *gin.Engine) {
 			post := auth.Group("/posts")
 			{
 				// return post list
-				post.GET("/", GetPosts)
+				post.GET("/", nil)
 				// return all message of the post which id = <:id>
 				// List[Message]
-				post.GET("/:id", GetReviews)
+				post.GET("/:id", nil)
 				// create a new post
-				post.POST("/", CreatePost)
+				post.POST("/", nil)
 				// create new message of the post which id = <:id>
-				post.POST("/:id", ReplyPost)
+				post.POST("/:id", nil)
 				// delete post which id = <:id>
-				post.DELETE("/:id", DeletePost)
+				post.DELETE("/:id", nil)
 
 			}
 
@@ -61,26 +59,26 @@ func InitRoute(g *gin.Engine) {
 		{
 			user := pub.Group("/user")
 			{
-				user.GET("/captcha", GenerateAuthcode)
-				user.POST("/login", Login)
-				user.POST("/register", Register)
-				user.POST("/verify", VerifyEmail)
+				user.GET("/captcha", nil)
+				user.POST("/login", nil)
+				user.POST("/register", nil)
+				user.POST("/verify", nil)
 			}
 
-			admin := api.Group("/admin")
+			admin := pub.Group("/admin")
 			{
-				admin.POST("/login", LoginAdmin)
+				admin.POST("/login", nil)
 			}
 
-			news := api.Group("/news")
+			news := pub.Group("/news")
 			{
-				news.GET("", GetAllNews)
+				news.GET("/", GetAllNews)
 				news.GET("/:id", GetSpecifyNews)
 			}
 
-			anniv := api.Group("/anniv")
+			anniv := pub.Group("/anniv")
 			{
-				anniv.GET("/", GetAllAnniversaries)
+				anniv.GET("", GetAllAnniversaries)
 				anniv.GET("/:id", GetSpecifyAnniversary)
 			}
 
