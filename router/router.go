@@ -62,7 +62,7 @@ func InitRoute(g *gin.Engine) {
 				user.GET("/captcha", Captcha)
 				user.POST("/login", Login)
 				user.POST("/register", Register)
-				user.POST("/verify", nil)
+				user.POST("/verify", SendEmailVerifyCode)
 			}
 
 			admin := pub.Group("/admin")

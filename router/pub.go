@@ -66,7 +66,7 @@ package router
 //	}
 //}
 //
-//func Register(c *gin.Context) {
+//func SendEmailVerifyCode(c *gin.Context) {
 //	ui := RegisterUserInfo{}
 //	if err := c.ShouldBindJSON(&ui); err != nil {
 //		c.JSON(http.StatusOK, gin.H{

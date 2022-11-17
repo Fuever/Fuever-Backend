@@ -4,23 +4,20 @@ import (
 	"Fuever/model"
 	"Fuever/service"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"log"
 	"net/http"
 )
 
-func SendEmailVerifyCode() {
-
-}
-
-type RegisterRequest struct {
+type EmailVerifyCodeRequest struct {
 	VerifyID   string `json:"verify_id" binding:"required"`
 	VerifyCode string `json:"verify_code" binding:"required"`
 	Mailbox    string `json:"mailbox" binding:"required"`
 	Password   string `json:"password" binding:"required"`
 }
 
-func Register(ctx *gin.Context) {
-	req := &RegisterRequest{}
+func SendEmailVerifyCode(ctx *gin.Context) {
+	req := &EmailVerifyCodeRequest{}
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
@@ -29,22 +26,21 @@ func Register(ctx *gin.Context) {
 		ctx.JSON(http.StatusForbidden, gin.H{})
 		return
 	}
-	user := &model.User{
-		Mail:     req.Mailbox,
-		Password: req.Password, //TODO 加密
-	}
-	// TODO 邮箱验证
-	err := model.CreateUser(user)
-	if err != nil {
-		ctx.JSON(http.StatusConflict, gin.H{
-			"msg": "user exist",
-		})
+	_, err := model.GetUserByMailbox(req.Mailbox)
+	if err != gorm.ErrRecordNotFound {
+		// 如果这条记录可见 说明已存在该用户
+		ctx.JSON(http.StatusConflict, gin.H{"msg": "user exist"})
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{
-		"data": user,
-	})
+	// TODO 邮箱验证
+	ctx.JSON(http.StatusOK, gin.H{})
 	return
+}
+
+type RegisterRequest struct {
+}
+
+func Register(ctx *gin.Context) {
 }
 
 type LoginRequest struct {
