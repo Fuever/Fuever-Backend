@@ -59,9 +59,9 @@ func InitRoute(g *gin.Engine) {
 		{
 			user := pub.Group("/user")
 			{
-				user.GET("/captcha", nil)
-				user.POST("/login", nil)
-				user.POST("/register", nil)
+				user.GET("/captcha", Captcha)
+				user.POST("/login", Login)
+				user.POST("/register", Register)
 				user.POST("/verify", nil)
 			}
 
