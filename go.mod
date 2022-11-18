@@ -14,7 +14,12 @@ require (
 require github.com/stretchr/testify v1.8.0
 
 require (
+	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
+	github.com/mozillazg/go-httpheader v0.3.1 // indirect
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.40 // indirect
 	golang.org/x/image v0.0.0-20190501045829-6d32002ffd75 // indirect
 )
 
