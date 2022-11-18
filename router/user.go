@@ -104,11 +104,10 @@ func Login(ctx *gin.Context) {
 		return
 	}
 	token := secret.GenerateTokenAndCache(user.ID)
-	user.Password = "" // 不能把真的密码扔回去
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": gin.H{
-			"user_info": user,
-			"token":     token,
+			"user_id": user.ID,
+			"token":   token,
 		},
 	})
 	return
