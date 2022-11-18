@@ -3,6 +3,7 @@ package middleware
 import (
 	"Fuever/service"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func failedResponse(code int, msg string) gin.H {
@@ -26,7 +27,7 @@ func UserAuth(ctx *gin.Context) {
 		ctx.Set("userID", userID)
 		return
 	} else {
-		ctx.AbortWithStatusJSON(200, failedResponse(40001, "user not in login status"))
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{})
 		return
 	}
 }
@@ -39,12 +40,12 @@ func AdminAuth(ctx *gin.Context) {
 			// 虽然查得到TOKEN
 			// 但是是普通用户
 			// 拒绝请求
-			ctx.AbortWithStatusJSON(200, failedResponse(40001, "user not in login status"))
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{})
 		}
 		ctx.Set("adminID", adminID)
 		return
 	} else {
-		ctx.AbortWithStatusJSON(200, failedResponse(40001, "user not in login status"))
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{})
 		return
 	}
 }

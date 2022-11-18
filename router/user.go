@@ -3,6 +3,8 @@ package router
 import (
 	"Fuever/model"
 	"Fuever/service"
+	"Fuever/util/repassword"
+	"Fuever/util/secret"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -59,7 +61,7 @@ func Register(ctx *gin.Context) {
 	}
 	user := &model.User{
 		Mail:     req.Mailbox,
-		Password: req.Password, // TODO 加密
+		Password: repassword.GeneratePasswordHash(req.Password),
 	}
 	_, err := model.GetUserByMailbox(req.Mailbox)
 	if err != nil {
@@ -72,6 +74,8 @@ func Register(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{})
 		return
 	}
+	// 密码不能传到网络上啊喂
+	user.Password = ""
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": user,
 	})
@@ -94,8 +98,17 @@ func Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{})
 		return
 	}
+	if !repassword.CheckPasswordHash(req.Password, user.Password) {
+		// 密码错误
+		ctx.JSON(http.StatusForbidden, gin.H{})
+		return
+	}
+	token := secret.GenerateTokenAndCache(user.ID)
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": user,
+		"data": gin.H{
+			"user_info": user,
+			"token":     token,
+		},
 	})
 	return
 }
