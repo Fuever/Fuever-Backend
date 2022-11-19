@@ -67,11 +67,7 @@ func getContent(param ...any) string {
 
 func generateMailboxVerifyCode() int {
 	for true {
-		code := rand.Int()
-		if code/100000 == 0 {
-			// 不是六位有效数字
-			continue
-		}
+		code := rand.Intn(900000) + 100000
 		if _, flag := verifyCodeMap[code]; flag {
 			// 如果这个verify code已经存在
 			// 需要重新生成
