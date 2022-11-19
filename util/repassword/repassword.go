@@ -2,6 +2,7 @@ package repassword
 
 import (
 	"crypto/md5"
+	"encoding/hex"
 	"math/rand"
 	"strings"
 )
@@ -25,8 +26,8 @@ func GeneratePasswordHash(password string) string {
 func calculateHash(password string, salt string) string {
 	h := password
 	for i := 0; i < 7; i++ {
-		s := md5.Sum([]byte(h + salt))
-		h = string(s[:])
+		s := md5.Sum(append([]byte(h), []byte(salt)...))
+		h = hex.EncodeToString(s[:])
 	}
 	return h
 }

@@ -64,7 +64,7 @@ func Register(ctx *gin.Context) {
 		Password: repassword.GeneratePasswordHash(req.Password),
 	}
 	_, err := model.GetUserByMailbox(req.Mailbox)
-	if err != nil {
+	if err == nil {
 		// 用户已存在
 		ctx.JSON(http.StatusConflict, gin.H{})
 		return
@@ -106,8 +106,8 @@ func Login(ctx *gin.Context) {
 	token := secret.GenerateTokenAndCache(user.ID)
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": gin.H{
-			"user_info": user,
-			"token":     token,
+			"user_id": user.ID,
+			"token":   token,
 		},
 	})
 	return
