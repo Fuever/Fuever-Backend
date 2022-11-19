@@ -6,13 +6,14 @@ import (
 	"log"
 	"net"
 	"net/smtp"
+	"os"
 )
 
 var (
 	host     = "smtp.qcloudmail.com"
 	port     = 465
-	email    = "Fuever@mail.avaqua.love"
-	password = "FuEver123456"
+	email    = os.Getenv("EMAIL_MAILBOX")
+	password = os.Getenv("EMAIL_PASSWORD")
 )
 
 func SendEmail(mailbox string, content string) error {

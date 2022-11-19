@@ -8,14 +8,15 @@ import (
 	"math/big"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 	"time"
 )
 
 var (
-	bucketUrl = "https://fuever-1313037799.cos.ap-nanjing.myqcloud.com"
-	SecretID  = "AKIDd8QsEVfqwCG6i5E7k7Rr7D4f1Bk25tRm"
-	SecretKey = "ECuPgjaBXfaGivtnX3KcnjX5RZimeJo6"
+	bucketUrl = os.Getenv("COS_BUCKET_URL")
+	SecretID  = os.Getenv("COS_SECRET_ID")
+	SecretKey = os.Getenv("COS_SECRET_KEY")
 )
 
 func SaveImage(file io.Reader) string {
@@ -28,7 +29,7 @@ func SaveImage(file io.Reader) string {
 		},
 	})
 	randInt, _ := rand.Int(rand.Reader, big.NewInt(100))
-	key := strconv.FormatInt(time.Now().UnixNano()+randInt.Int64(), 10) + ".jpg"
+	key := strconv.FormatInt(time.Now().UnixNano()+randInt.Int64()%100, 10) + ".jpg"
 	println(key)
 	_, err := client.Object.Put(context.Background(), key, file, nil)
 	if err != nil {
