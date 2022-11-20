@@ -82,13 +82,13 @@ func Register(ctx *gin.Context) {
 	return
 }
 
-type LoginRequest struct {
+type UserLoginRequest struct {
 	Mailbox  string `json:"mailbox" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
-func Login(ctx *gin.Context) {
-	req := &LoginRequest{}
+func UserLogin(ctx *gin.Context) {
+	req := &UserLoginRequest{}
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
