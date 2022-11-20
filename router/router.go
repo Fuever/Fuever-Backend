@@ -1,6 +1,7 @@
 package router
 
 import (
+	"Fuever/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -38,6 +39,7 @@ func InitRoute(g *gin.Engine) {
 			}
 
 			post := auth.Group("/posts")
+			user.Use(middleware.UserAuth)
 			{
 				// return post list
 				post.GET("/", nil)
@@ -45,7 +47,7 @@ func InitRoute(g *gin.Engine) {
 				// List[Message]
 				post.GET("/:id", nil)
 				// create a new post
-				post.POST("/", nil)
+				post.POST("/", CreatePost)
 				// create new message of the post which id = <:id>
 				post.POST("/:id", nil)
 				// delete post which id = <:id>
@@ -67,7 +69,7 @@ func InitRoute(g *gin.Engine) {
 
 			admin := pub.Group("/admin")
 			{
-				admin.POST("/login", nil)
+				admin.POST("/login", AdminLogin)
 			}
 
 			news := pub.Group("/news")

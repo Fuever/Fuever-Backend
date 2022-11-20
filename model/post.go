@@ -3,7 +3,7 @@ package model
 type Post struct {
 	ID          int    `gorm:"primaryKey;autoIncrement"`
 	AuthorID    int    `gorm:"column:author_id;index;not null"`
-	Title       string `gorm:"varchar(128);not null"`
+	Title       string `gorm:"varchar(128);index;not null"`
 	CreatedTime int64  `gorm:"autoCreateTime"`
 	UpdatedTime int64  `gorm:"not null"`
 	State       int    `gorm:"not null"`
