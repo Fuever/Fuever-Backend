@@ -1,14 +1,14 @@
 package model
 
 type Post struct {
-	ID          int    `gorm:"primaryKey;autoIncrement"`
-	AuthorID    int    `gorm:"column:author_id;index;not null"`
-	Title       string `gorm:"varchar(128);index;not null"`
-	CreatedTime int64  `gorm:"autoCreateTime"`
-	UpdatedTime int64  `gorm:"not null"`
-	State       int    `gorm:"not null"`
-	BlockID     int    `gorm:"column:block_id;not null"`
-	IsLock      bool   `gorm:"column:is_lock;default:0"`
+	ID          int    `gorm:"primaryKey;autoIncrement" json:"id"`
+	AuthorID    int    `gorm:"column:author_id;index;not null" json:"authorID"`
+	Title       string `gorm:"varchar(128);index;not null" json:"title"`
+	CreatedTime int64  `gorm:"autoCreateTime" json:"created_time"`
+	UpdatedTime int64  `gorm:"not null" json:"updated_time"`
+	State       int    `gorm:"not null" json:"state"`
+	BlockID     int    `gorm:"column:block_id;not null" json:"block_id"`
+	IsLock      bool   `gorm:"column:is_lock;default:0" json:"is_lock"`
 }
 
 const (

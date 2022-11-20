@@ -42,14 +42,14 @@ func InitRoute(g *gin.Engine) {
 			user.Use(middleware.UserAuth)
 			{
 				// return post list
-				post.GET("/", nil)
+				post.GET("/", GetAllPosts)
 				// return all message of the post which id = <:id>
 				// List[Message]
 				post.GET("/:id", nil)
 				// create a new post
 				post.POST("/", CreatePost)
 				// create new message of the post which id = <:id>
-				post.POST("/:id", nil)
+				post.PUT("/:id", nil)
 				// delete post which id = <:id>
 				post.DELETE("/:id", nil)
 
