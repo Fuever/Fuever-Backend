@@ -44,3 +44,13 @@ type WordFilter interface {
 	// 数据量很小
 	readSensitiveWord() []string
 }
+
+var filter WordFilter
+
+func GetFilter() WordFilter {
+	if filter == nil {
+		filter = &AcAutomaton{}
+		filter.InitFilter()
+	}
+	return filter
+}

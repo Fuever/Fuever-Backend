@@ -2,6 +2,7 @@ package router
 
 import (
 	"Fuever/model"
+	"Fuever/util/sensitive"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -212,7 +213,7 @@ func CreateComment(ctx *gin.Context) {
 		return
 	}
 	postID := uriReq.ID
-	content := req.Content
+	content := sensitive.GetFilter().ReplaceSensitiveWord(req.Content, "*")
 	comment := &model.Message{
 		AuthorID:    userID,
 		Content:     content,
