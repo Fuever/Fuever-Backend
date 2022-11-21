@@ -1,18 +1,20 @@
 package router
 
 import (
+	"Fuever/middleware"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func InitRoute(g *gin.Engine) {
 
-	loginCheck := func(ctx *gin.Context) {} // authentication middleware
-
 	api := g.Group("/api")
 	{
-		auth := api.Group("/auth", loginCheck)
+		api.Use(cors.Default())
+		auth := api.Group("/auth")
 		{
 			user := auth.Group("/user", nil)
+			user.Use(middleware.UserAuth)
 			{
 				user.GET("/", nil)
 				user.POST("/", nil)
@@ -38,19 +40,13 @@ func InitRoute(g *gin.Engine) {
 			}
 
 			post := auth.Group("/posts")
+			post.Use(middleware.UserAuth)
 			{
-				// return post list
-				post.GET("/", nil)
-				// return all message of the post which id = <:id>
-				// List[Message]
-				post.GET("/:id", nil)
-				// create a new post
-				post.POST("/", nil)
-				// create new message of the post which id = <:id>
-				post.POST("/:id", nil)
-				// delete post which id = <:id>
-				post.DELETE("/:id", nil)
-
+				post.GET("/b/:block_id", GetAllPosts)
+				post.POST("/p/", CreatePost)
+				post.GET("/p/:id", GetSpecifyPost)
+				post.PUT("/p/:id", UpdateSpecifyPost)
+				post.DELETE("/p/:id", DeleteSpecifyPost)
 			}
 
 		}
@@ -67,7 +63,7 @@ func InitRoute(g *gin.Engine) {
 
 			admin := pub.Group("/admin")
 			{
-				admin.POST("/login", nil)
+				admin.POST("/login", AdminLogin)
 			}
 
 			news := pub.Group("/news")

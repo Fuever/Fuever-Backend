@@ -11,7 +11,11 @@ require (
 	gorm.io/gorm v1.23.8
 )
 
-require github.com/stretchr/testify v1.8.0
+require (
+	github.com/gin-contrib/cors v1.4.0
+	github.com/stretchr/testify v1.8.0
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.40
+)
 
 require (
 	github.com/clbanning/mxj v1.8.4 // indirect
@@ -19,7 +23,6 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mozillazg/go-httpheader v0.3.1 // indirect
-	github.com/tencentyun/cos-go-sdk-v5 v0.7.40 // indirect
 	golang.org/x/image v0.0.0-20190501045829-6d32002ffd75 // indirect
 )
 

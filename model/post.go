@@ -1,14 +1,14 @@
 package model
 
 type Post struct {
-	ID          int    `gorm:"primaryKey;autoIncrement"`
-	AuthorID    int    `gorm:"column:author_id;index;not null"`
-	Title       string `gorm:"varchar(128);not null"`
-	CreatedTime int64  `gorm:"autoCreateTime"`
-	UpdatedTime int64  `gorm:"not null"`
-	State       int    `gorm:"not null"`
-	BlockID     int    `gorm:"column:block_id;not null"`
-	IsLock      bool   `gorm:"column:is_lock;default:0"`
+	ID          int    `gorm:"primaryKey;autoIncrement" json:"id"`
+	AuthorID    int    `gorm:"column:author_id;index;not null" json:"authorID"`
+	Title       string `gorm:"varchar(128);index;not null" json:"title"`
+	CreatedTime int64  `gorm:"autoCreateTime;index" json:"created_time"`
+	UpdatedTime int64  `gorm:"not null;index" json:"updated_time"`
+	State       int    `gorm:"not null" json:"state"`
+	BlockID     int    `gorm:"column:block_id;not null" json:"block_id"`
+	IsLock      bool   `gorm:"column:is_lock;default:0" json:"is_lock"`
 }
 
 const (
@@ -23,6 +23,17 @@ func CreatePost(post *Post) error {
 		return err
 	}
 	return nil
+}
+
+func GetPostByID(id int) (*Post, error) {
+	post := &Post{
+		ID: id,
+	}
+	err := db.First(post).Error
+	if err != nil {
+		return nil, err
+	}
+	return post, nil
 }
 
 func GetNormalPostsWithOffsetLimit(blockID int, offset int, limit int) ([]*Post, error) {
@@ -65,7 +76,7 @@ func DeletePostByID(id int) error {
 
 func getParticularStatePostWithOffsetLimit(blockID int, state int, offset int, limit int) ([]*Post, error) {
 	posts := make([]*Post, 0)
-	err := db.Where(&Post{State: state, BlockID: blockID}).Offset(offset).Limit(limit).Find(&posts).Error
+	err := db.Where(&Post{State: state, BlockID: blockID}).Offset(offset - 1).Limit(limit).Order("updated_time desc").Find(&posts).Error
 	if err != nil {
 		return nil, err
 	}
