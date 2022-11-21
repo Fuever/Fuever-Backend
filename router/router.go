@@ -2,6 +2,7 @@ package router
 
 import (
 	"Fuever/middleware"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,6 +10,7 @@ func InitRoute(g *gin.Engine) {
 
 	api := g.Group("/api")
 	{
+		api.Use(cors.Default())
 		auth := api.Group("/auth")
 		{
 			user := auth.Group("/user", nil)
@@ -40,18 +42,11 @@ func InitRoute(g *gin.Engine) {
 			post := auth.Group("/posts")
 			post.Use(middleware.UserAuth)
 			{
-				// return post list
-				post.GET("/", GetAllPosts)
-				// create a new post
-				post.POST("/", CreatePost)
-				// return all message of the post which id = <:id>
-				// List[Message]
-				post.GET("/:id", GetSpecifyPost)
-				// create new message of the post which id = <:id>
-				post.PUT("/:id", nil)
-				// delete post which id = <:id>
-				post.DELETE("/:id", nil)
-
+				post.GET("/b/:block_id", GetAllPosts)
+				post.POST("/p/", CreatePost)
+				post.GET("/p/:id", GetSpecifyPost)
+				post.PUT("/p/:id", UpdateSpecifyPost)
+				post.DELETE("/p/:id", DeleteSpecifyPost)
 			}
 
 		}

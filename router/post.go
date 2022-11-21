@@ -15,17 +15,18 @@ type CreatePostRequest struct {
 }
 
 func CreatePost(ctx *gin.Context) {
-	req := CreatePostRequest{}
+	req := &CreatePostRequest{}
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
 	authorID := ctx.GetInt("userID")
+	nowTimeUnix := time.Now().Unix()
 	post := &model.Post{
 		AuthorID:    authorID,
 		Title:       req.Title,
-		CreatedTime: time.Now().Unix(),
-		UpdatedTime: time.Now().Unix(),
+		CreatedTime: nowTimeUnix,
+		UpdatedTime: nowTimeUnix,
 		State:       0,
 		BlockID:     req.BlockID,
 		IsLock:      false,
@@ -43,19 +44,27 @@ func CreatePost(ctx *gin.Context) {
 	return
 }
 
-type GetAllPostsRequest struct {
-	Offset  int `uri:"offset" binding:"required"`
-	Limit   int `uri:"limit" binding:"required"`
+type GetAllPostsUriRequest struct {
 	BlockID int `uri:"block_id" binding:"required"`
 }
 
+type GetAllPostsQueryRequest struct {
+	Offset int `form:"offset" binding:"required"`
+	Limit  int `form:"limit" binding:"required"`
+}
+
 func GetAllPosts(ctx *gin.Context) {
-	req := GetAllPostsRequest{}
-	if err := ctx.ShouldBindUri(req); err != nil {
+	uriReq := &GetAllPostsUriRequest{}
+	if err := ctx.ShouldBindUri(uriReq); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
-	posts, err := model.GetNormalPostsWithOffsetLimit(req.BlockID, req.Offset, req.Limit)
+	urlReq := &GetAllPostsQueryRequest{}
+	if err := ctx.ShouldBindQuery(urlReq); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	posts, err := model.GetNormalPostsWithOffsetLimit(uriReq.BlockID, urlReq.Offset, urlReq.Limit)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			ctx.JSON(http.StatusNotFound, gin.H{})

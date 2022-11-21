@@ -4,7 +4,6 @@ import (
 	"Fuever/model"
 	"Fuever/service"
 	"Fuever/util/repassword"
-	"Fuever/util/secret"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -115,7 +114,7 @@ func UserLogin(ctx *gin.Context) {
 		ctx.JSON(http.StatusForbidden, gin.H{})
 		return
 	}
-	token := secret.GenerateTokenAndCache(user.ID)
+	token := service.Login(user.ID)
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": gin.H{
 			"token": token,
