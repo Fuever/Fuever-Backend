@@ -4,6 +4,7 @@ import (
 	"Fuever/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"log"
 	"net/http"
 	"time"
 )
@@ -66,5 +67,103 @@ func GetAllPosts(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": posts,
 	})
+	return
+}
+
+type SpecifyPostRequest struct {
+	ID int `uri:"id" binding:"required"`
+}
+
+func GetSpecifyPost(ctx *gin.Context) {
+	req := &SpecifyPostRequest{}
+	if err := ctx.ShouldBindUri(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	post, err := model.GetPostByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": post,
+	})
+	return
+}
+
+type UpdateSpecifyPostRequest struct {
+	NewTitle string `json:"new_title" binding:"required"`
+}
+
+// UpdateSpecifyPost 楼主仅允许修改标题
+func UpdateSpecifyPost(ctx *gin.Context) {
+	req := &SpecifyPostRequest{}
+	if err := ctx.ShouldBindUri(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	updateReq := &UpdateSpecifyPostRequest{}
+	if err := ctx.ShouldBindJSON(updateReq); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	newTitle := updateReq.NewTitle
+	post, err := model.GetPostByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	userID := ctx.GetInt("userID")
+	//不是作者没有修改权限
+	if userID != post.AuthorID {
+		ctx.JSON(http.StatusForbidden, gin.H{})
+		return
+	}
+	//被锁定了无法修改
+	if post.IsLock {
+		ctx.JSON(http.StatusForbidden, gin.H{})
+		return
+	}
+	post.Title = newTitle
+	post.UpdatedTime = time.Now().Unix()
+	err = model.UpdatePost(post)
+	if err != nil {
+		log.Println(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}
+
+func DeleteSpecifyPost(ctx *gin.Context) {
+	req := &SpecifyPostRequest{}
+	if err := ctx.ShouldBindUri(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	post, err := model.GetPostByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	userID := ctx.GetInt("userID")
+	//不是作者没有修改权限
+	if userID != post.AuthorID {
+		ctx.JSON(http.StatusForbidden, gin.H{})
+		return
+	}
+	//被锁定了无法修改
+	if post.IsLock {
+		ctx.JSON(http.StatusForbidden, gin.H{})
+		return
+	}
+	err = model.DeletePostByID(post.ID)
+	if err != nil {
+		log.Println(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
 	return
 }

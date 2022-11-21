@@ -74,10 +74,22 @@ func Register(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{})
 		return
 	}
-	// 密码不能传到网络上啊喂
-	user.Password = ""
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}
+
+func Captcha(ctx *gin.Context) {
+	id, imgBase64, err := service.MakeCaptcha()
+	if err != nil {
+		log.Println(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": user,
+		"data": gin.H{
+			"verify_id": id,
+			"img":       imgBase64,
+		},
 	})
 	return
 }
@@ -106,24 +118,7 @@ func UserLogin(ctx *gin.Context) {
 	token := secret.GenerateTokenAndCache(user.ID)
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": gin.H{
-			"user_id": user.ID,
-			"token":   token,
-		},
-	})
-	return
-}
-
-func Captcha(ctx *gin.Context) {
-	id, imgBase64, err := service.MakeCaptcha()
-	if err != nil {
-		log.Println(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{})
-		return
-	}
-	ctx.JSON(http.StatusOK, gin.H{
-		"data": gin.H{
-			"verify_id": id,
-			"img":       imgBase64,
+			"token": token,
 		},
 	})
 	return

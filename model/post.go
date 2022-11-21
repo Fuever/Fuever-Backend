@@ -25,6 +25,17 @@ func CreatePost(post *Post) error {
 	return nil
 }
 
+func GetPostByID(id int) (*Post, error) {
+	post := &Post{
+		ID: id,
+	}
+	err := db.Find(post).Error
+	if err != nil {
+		return nil, err
+	}
+	return post, nil
+}
+
 func GetNormalPostsWithOffsetLimit(blockID int, offset int, limit int) ([]*Post, error) {
 	return getParticularStatePostWithOffsetLimit(blockID, _normal, offset, limit)
 }

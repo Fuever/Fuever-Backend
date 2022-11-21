@@ -7,13 +7,12 @@ import (
 
 func InitRoute(g *gin.Engine) {
 
-	loginCheck := func(ctx *gin.Context) {} // authentication middleware
-
 	api := g.Group("/api")
 	{
-		auth := api.Group("/auth", loginCheck)
+		auth := api.Group("/auth")
 		{
 			user := auth.Group("/user", nil)
+			user.Use(middleware.UserAuth)
 			{
 				user.GET("/", nil)
 				user.POST("/", nil)
@@ -39,15 +38,15 @@ func InitRoute(g *gin.Engine) {
 			}
 
 			post := auth.Group("/posts")
-			user.Use(middleware.UserAuth)
+			post.Use(middleware.UserAuth)
 			{
 				// return post list
 				post.GET("/", GetAllPosts)
-				// return all message of the post which id = <:id>
-				// List[Message]
-				post.GET("/:id", nil)
 				// create a new post
 				post.POST("/", CreatePost)
+				// return all message of the post which id = <:id>
+				// List[Message]
+				post.GET("/:id", GetSpecifyPost)
 				// create new message of the post which id = <:id>
 				post.PUT("/:id", nil)
 				// delete post which id = <:id>
