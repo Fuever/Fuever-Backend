@@ -1,11 +1,13 @@
 package model
 
+// Message
+// Message只允许增删 不允许修改
 type Message struct {
-	ID          int    `gorm:"primaryKey;autoIncrement"`
-	AuthorID    int    `gorm:"column:author_id;index;not null"`
-	Content     string `gorm:"text;not null"`
-	PostID      int    `gorm:"column:post_id;index;not null"`
-	CreatedTime int64  `gorm:"autoCreateTime"`
+	ID          int    `gorm:"primaryKey;autoIncrement" json:"id"`
+	AuthorID    int    `gorm:"column:author_id;index;not null" json:"author_id"`
+	Content     string `gorm:"text;not null" json:"content"`
+	PostID      int    `gorm:"column:post_id;index;not null" json:"post_id"`
+	CreatedTime int64  `gorm:"column:created_time" json:"created_time"`
 }
 
 func CreateMessage(message *Message) error {

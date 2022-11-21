@@ -13,16 +13,17 @@ func InitRoute(g *gin.Engine) {
 		api.Use(cors.Default())
 		auth := api.Group("/auth")
 		{
-			user := auth.Group("/user", nil)
+			user := auth.Group("/user")
 			user.Use(middleware.UserAuth)
 			{
 				user.GET("/", nil)
 				user.POST("/", nil)
 				user.PUT("/", nil)
 				user.DELETE("/", nil)
+				user.DELETE("/logout", UserLogout)
 			}
 
-			admin := auth.Group("/admin", nil)
+			admin := auth.Group("/admin")
 			{
 				//TODO
 				admin.POST("/anniversary", CreateAnniversary)
@@ -44,6 +45,7 @@ func InitRoute(g *gin.Engine) {
 			{
 				post.GET("/b/:block_id", GetAllPosts)
 				post.POST("/p/", CreatePost)
+				post.POST("/p/:id", CreateComment)
 				post.GET("/p/:id", GetSpecifyPost)
 				post.PUT("/p/:id", UpdateSpecifyPost)
 				post.DELETE("/p/:id", DeleteSpecifyPost)

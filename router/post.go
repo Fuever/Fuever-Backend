@@ -49,7 +49,7 @@ type GetAllPostsUriRequest struct {
 }
 
 type GetAllPostsQueryRequest struct {
-	Offset int `form:"offset" binding:"required"`
+	Offset int `form:"offset,default=0"`
 	Limit  int `form:"limit" binding:"required"`
 }
 
@@ -83,19 +83,37 @@ type SpecifyPostRequest struct {
 	ID int `uri:"id" binding:"required"`
 }
 
+type GetSpecifyPostQueryRequest struct {
+	Offset int `form:"offset;default=0"`
+	Limit  int `form:"limit" binding:"required"`
+}
+
 func GetSpecifyPost(ctx *gin.Context) {
-	req := &SpecifyPostRequest{}
-	if err := ctx.ShouldBindUri(req); err != nil {
+	uriReq := &SpecifyPostRequest{}
+	if err := ctx.ShouldBindUri(uriReq); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
-	post, err := model.GetPostByID(req.ID)
+	queryReq := &GetSpecifyPostQueryRequest{}
+	if err := ctx.ShouldBindQuery(queryReq); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	post, err := model.GetPostByID(uriReq.ID)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{})
 		return
 	}
+	comments, err := model.GetMessageByPostIDWithOffsetLimit(post.ID, queryReq.Offset, queryReq.Offset)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": post,
+		"data": gin.H{
+			"post":    post,
+			"comment": comments,
+		},
 	})
 	return
 }
@@ -170,6 +188,39 @@ func DeleteSpecifyPost(ctx *gin.Context) {
 	err = model.DeletePostByID(post.ID)
 	if err != nil {
 		log.Println(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}
+
+type CreateCommentRequest struct {
+	Content string `json:"content" binding:"required"`
+}
+
+func CreateComment(ctx *gin.Context) {
+	userID := ctx.GetInt("userID")
+	uriReq := &SpecifyPostRequest{}
+	if err := ctx.ShouldBindUri(uriReq); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	req := &CreateCommentRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	postID := uriReq.ID
+	content := req.Content
+	comment := &model.Message{
+		AuthorID:    userID,
+		Content:     content,
+		PostID:      postID,
+		CreatedTime: time.Now().Unix(),
+	}
+	err := model.CreateMessage(comment)
+	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{})
 		return
 	}

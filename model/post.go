@@ -4,8 +4,8 @@ type Post struct {
 	ID          int    `gorm:"primaryKey;autoIncrement" json:"id"`
 	AuthorID    int    `gorm:"column:author_id;index;not null" json:"authorID"`
 	Title       string `gorm:"varchar(128);index;not null" json:"title"`
-	CreatedTime int64  `gorm:"autoCreateTime;index" json:"created_time"`
-	UpdatedTime int64  `gorm:"not null;index" json:"updated_time"`
+	CreatedTime int64  `gorm:"column:created_time;index" json:"created_time"`
+	UpdatedTime int64  `gorm:"column:updated_time;not null;index" json:"updated_time"`
 	State       int    `gorm:"not null" json:"state"`
 	BlockID     int    `gorm:"column:block_id;not null" json:"block_id"`
 	IsLock      bool   `gorm:"column:is_lock;default:0" json:"is_lock"`
@@ -76,7 +76,7 @@ func DeletePostByID(id int) error {
 
 func getParticularStatePostWithOffsetLimit(blockID int, state int, offset int, limit int) ([]*Post, error) {
 	posts := make([]*Post, 0)
-	err := db.Where(&Post{State: state, BlockID: blockID}).Offset(offset - 1).Limit(limit).Order("updated_time desc").Find(&posts).Error
+	err := db.Where(&Post{State: state, BlockID: blockID}).Offset(offset).Limit(limit).Order("updated_time desc").Find(&posts).Error
 	if err != nil {
 		return nil, err
 	}

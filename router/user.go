@@ -122,3 +122,10 @@ func UserLogin(ctx *gin.Context) {
 	})
 	return
 }
+
+func UserLogout(ctx *gin.Context) {
+	userID := ctx.GetInt("userID")
+	service.Logout(userID)
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}

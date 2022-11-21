@@ -5,7 +5,7 @@ type News struct {
 	AuthorID   int    `gorm:"column:author_id;not null;index"`
 	Title      string `gorm:"varchar(128);not null"` // 我觉得这个地方要建一个索引啊
 	Content    string `gorm:"text;not null"`
-	CreateTime int64  `gorm:"autoCreateTime"`
+	CreateTime int64  `gorm:"column:created_time"`
 	Cover      string `gorm:"varchar(128)"` // 新闻的封面
 }
 
