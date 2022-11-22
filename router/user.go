@@ -160,3 +160,82 @@ func UserUploadAvatar(ctx *gin.Context) {
 	})
 	return
 }
+
+type GetUserInfoRequest struct {
+	ID int `uri:"id" binding:"required"`
+}
+
+type UserInfo struct {
+	ID           int    `json:"id"`
+	Mail         string `json:"mail"`
+	Nickname     string `json:"nickname,omitempty"`
+	Username     string `json:"username,omitempty"`
+	Avatar       string `json:"avatar,omitempty"`
+	StudentID    int    `json:"student_id,omitempty"`
+	Phone        int    `json:"phone,omitempty"`
+	Gender       bool   `json:"gender,omitempty"`
+	Age          int    `json:"age,omitempty"`
+	Job          string `json:"job,omitempty"`
+	EntranceTime int64  `json:"entrance_time,omitempty"`
+	ClassID      int    `json:"class_id,omitempty"`
+	Residence    string `json:"residence,omitempty"`
+}
+
+func GetUserInfo(ctx *gin.Context) {
+	req := &GetUserInfoRequest{}
+	if err := ctx.ShouldBindUri(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	user, err := model.GetUserByID(req.ID)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			ctx.JSON(http.StatusNotFound, gin.H{})
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	info := &UserInfo{
+		ID:           user.ID,
+		Mail:         user.Mail,
+		Nickname:     user.Nickname,
+		Username:     user.Username,
+		Avatar:       user.Avatar,
+		StudentID:    user.StudentID,
+		Phone:        user.Phone,
+		Gender:       user.Gender,
+		Age:          user.Age,
+		Job:          user.Job,
+		EntranceTime: user.EntranceTime,
+		ClassID:      user.ClassID,
+		Residence:    user.Residence,
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": info,
+	})
+	return
+}
+
+func DeleteUser(ctx *gin.Context) {
+	userID := ctx.GetInt("userID")
+	// 缓存要先清除
+	service.Logout(userID)
+	err := model.DeleteUserByID(userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}
+
+// GetStudentAuthMessage 从这个接口获取验证数据
+func GetStudentAuthMessage(ctx *gin.Context) {
+
+}
+
+// UserStudentAuth 然后在这个接口验证
+func UserStudentAuth(ctx *gin.Context) {
+
+}

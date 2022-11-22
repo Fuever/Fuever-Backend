@@ -16,10 +16,10 @@ func InitRoute(g *gin.Engine) {
 			user := auth.Group("/user")
 			user.Use(middleware.UserAuth)
 			{
-				user.GET("/", nil)
+				user.GET("/:id", GetUserInfo)
 				user.POST("/", nil)
 				user.PUT("/", nil)
-				user.DELETE("/", nil)
+				user.DELETE("/", DeleteUser)
 				user.POST("/avatar", UserUploadAvatar)
 				user.DELETE("/logout", UserLogout)
 			}
@@ -47,10 +47,8 @@ func InitRoute(g *gin.Engine) {
 			post := auth.Group("/posts")
 			post.Use(middleware.UserAuth)
 			{
-				post.GET("/b/:block_id", GetAllPosts)
 				post.POST("/p/", CreatePost)
 				post.POST("/p/:id", CreateComment)
-				post.GET("/p/:id", GetSpecifyPost)
 				post.PUT("/p/:id", UpdateSpecifyPost)
 				post.DELETE("/p/:id", DeleteSpecifyPost)
 			}
@@ -82,6 +80,12 @@ func InitRoute(g *gin.Engine) {
 			{
 				anniv.GET("", GetAllAnniversaries)
 				anniv.GET("/:id", GetSpecifyAnniversary)
+			}
+
+			post := pub.Group("/posts")
+			{
+				post.GET("/b/:block_id", GetAllPosts)
+				post.GET("/p/:id", GetSpecifyPost)
 			}
 
 		}
