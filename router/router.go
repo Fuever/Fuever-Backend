@@ -24,6 +24,7 @@ func InitRoute(g *gin.Engine) {
 			}
 
 			admin := auth.Group("/admin")
+			admin.Use(middleware.AdminAuth)
 			{
 				//TODO
 				admin.POST("/anniversary", CreateAnniversary)
@@ -32,6 +33,8 @@ func InitRoute(g *gin.Engine) {
 				admin.POST("/news", CreateNews)
 				admin.PUT("/news", UpdateNews)
 				admin.DELETE("/news", DeleteNews)
+
+				admin.POST("/img", UploadImage)
 			}
 
 			// recommend alumnus api
