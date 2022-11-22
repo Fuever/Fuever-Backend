@@ -5,9 +5,14 @@ import (
 	"Fuever/router"
 	"Fuever/util/secret"
 	"github.com/gin-gonic/gin"
+	"math/rand"
+	"time"
 )
 
 func main() {
+
+	rand.Seed(time.Now().Unix())
+
 	model.InitDB()
 	g := gin.Default()
 

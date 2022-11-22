@@ -216,3 +216,26 @@ func GetUserInfo(ctx *gin.Context) {
 	})
 	return
 }
+
+func DeleteUser(ctx *gin.Context) {
+	userID := ctx.GetInt("userID")
+	// 缓存要先清除
+	service.Logout(userID)
+	err := model.DeleteUserByID(userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}
+
+// GetStudentAuthMessage 从这个接口获取验证数据
+func GetStudentAuthMessage(ctx *gin.Context) {
+
+}
+
+// UserStudentAuth 然后在这个接口验证
+func UserStudentAuth(ctx *gin.Context) {
+
+}

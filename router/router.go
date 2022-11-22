@@ -19,7 +19,7 @@ func InitRoute(g *gin.Engine) {
 				user.GET("/:id", GetUserInfo)
 				user.POST("/", nil)
 				user.PUT("/", nil)
-				user.DELETE("/", nil)
+				user.DELETE("/", DeleteUser)
 				user.POST("/avatar", UserUploadAvatar)
 				user.DELETE("/logout", UserLogout)
 			}

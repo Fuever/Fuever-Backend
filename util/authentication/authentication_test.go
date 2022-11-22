@@ -21,20 +21,15 @@ func DisplayStudentMessage(student resource.StudentMessage) {
 }
 
 func TestAuthentication(t *testing.T) {
-	//dormitoryMessageArray := resource.DormitoryMessages()
-	//for _, array := range dormitoryMessageArray {
-	//	for i := 0; i < len(array); i++ {
-	//		DisplayStudentMessage(*array[i])
-	//	}
-	//	fmt.Println("----------------")
-	//}
-	//for i := 0; i < 50; i++ {
-	//	rand.Seed(time.Now().UnixNano())
-	//	x := rand.Int()
-	//	fmt.Println(x)
-	//}
-	studentMessageArray := resource.StudentMessages() //获取学生信息
-	visitor := RandStudent(studentMessageArray)       //随机生成学生
+	//studentMessageArray := resource.StudentMessages() //获取学生信息
+	//visitor := RandStudent(studentMessageArray)       //随机生成学生
+	visitor := resource.StudentMessage{
+		Number:    82000217,
+		Name:      "刘克鸿",
+		Building:  32,
+		Dormitory: 106,
+		Bed:       1,
+	}
 	fmt.Println("待验证访客")
 	DisplayStudentMessage(visitor) //输出访客信息
 	//生成随机学生列表并输出
