@@ -30,7 +30,6 @@ func SaveImage(file io.Reader) string {
 	})
 	randInt, _ := rand.Int(rand.Reader, big.NewInt(100))
 	key := strconv.FormatInt(time.Now().UnixNano()+randInt.Int64()%100, 10) + ".jpg"
-	println(key)
 	_, err := client.Object.Put(context.Background(), key, file, nil)
 	if err != nil {
 		panic(err)

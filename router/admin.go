@@ -2,8 +2,8 @@ package router
 
 import (
 	"Fuever/model"
+	"Fuever/service"
 	"Fuever/util/repassword"
-	"Fuever/util/secret"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -34,7 +34,7 @@ func AdminLogin(ctx *gin.Context) {
 		ctx.JSON(http.StatusForbidden, gin.H{})
 		return
 	}
-	token := secret.GenerateTokenAndCache(admin.ID)
+	token := service.Login(admin.ID)
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": gin.H{
 			"admin_id": admin.ID,

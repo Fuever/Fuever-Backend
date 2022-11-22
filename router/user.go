@@ -3,6 +3,7 @@ package router
 import (
 	"Fuever/model"
 	"Fuever/service"
+	"Fuever/util/img"
 	"Fuever/util/repassword"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -127,5 +128,35 @@ func UserLogout(ctx *gin.Context) {
 	userID := ctx.GetInt("userID")
 	service.Logout(userID)
 	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}
+
+func UserUploadAvatar(ctx *gin.Context) {
+	userID := ctx.GetInt("userID")
+	fileHeader, err := ctx.FormFile("avatar")
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	file, err := fileHeader.Open()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	avatarPath := img.SaveImage(file)
+	user, err := model.GetUserByID(userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	user.Avatar = avatarPath
+	err = model.UpdateUser(user)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"avatar": avatarPath,
+	})
 	return
 }
