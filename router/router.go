@@ -20,6 +20,7 @@ func InitRoute(g *gin.Engine) {
 				user.POST("/", nil)
 				user.PUT("/", nil)
 				user.DELETE("/", nil)
+				user.POST("/avatar", UserUploadAvatar)
 				user.DELETE("/logout", UserLogout)
 			}
 
