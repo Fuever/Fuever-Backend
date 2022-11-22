@@ -16,7 +16,7 @@ func InitRoute(g *gin.Engine) {
 			user := auth.Group("/user")
 			user.Use(middleware.UserAuth)
 			{
-				user.GET("/", nil)
+				user.GET("/:id", GetUserInfo)
 				user.POST("/", nil)
 				user.PUT("/", nil)
 				user.DELETE("/", nil)

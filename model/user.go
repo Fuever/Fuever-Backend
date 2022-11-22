@@ -41,7 +41,7 @@ func GetUserByMailbox(mailbox string) (*User, error) {
 
 func GetUserByID(id int) (*User, error) {
 	user := &User{ID: id}
-	err := db.Select("ID", "Password").First(user).Error
+	err := db.First(user).Error
 	if err != nil {
 		return nil, err
 	}
