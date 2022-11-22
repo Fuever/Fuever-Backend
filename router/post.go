@@ -2,6 +2,7 @@ package router
 
 import (
 	"Fuever/model"
+	"Fuever/service"
 	"Fuever/util/sensitive"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -105,7 +106,7 @@ func GetSpecifyPost(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{})
 		return
 	}
-	comments, err := model.GetMessageByPostIDWithOffsetLimit(post.ID, queryReq.Offset, queryReq.Offset)
+	comments, err := service.GetComments(post.ID, queryReq.Offset, queryReq.Limit)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		ctx.JSON(http.StatusInternalServerError, gin.H{})
 		return
