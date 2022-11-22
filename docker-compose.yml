@@ -4,6 +4,7 @@ services:
 
   db:
     image: postgres
+    container_name: fuever_db
     restart: always
     environment:
       POSTGRES_DB: fuever
@@ -14,6 +15,23 @@ services:
 
   cache:
     image: redis:6.2
+    container_name: fuever_redis
     restart: always
     ports:
       - "6379:6379"
+  
+  golang:
+    # build: 
+    #   context: .
+    #   dockerfile: dockerfile
+    image: avaqua/fuever:latest
+    container_name: fuever_go
+    restart: always
+    ports:
+      - "8080:8080"
+    command: ./boot
+    # stdin_open: true
+    # tty: true
+    depends_on:
+      - db
+      - cache

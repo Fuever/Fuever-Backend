@@ -1,0 +1,10 @@
+*
+!cmd
+!go.mod
+!go.sum
+!middleware
+!resource
+!service
+!util
+!router
+!model
