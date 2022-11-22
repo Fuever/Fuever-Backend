@@ -31,8 +31,8 @@ func CreateUser(user *User) error {
 }
 
 func GetUserByMailbox(mailbox string) (*User, error) {
-	user := &User{Mail: mailbox}
-	err := db.First(user).Error
+	user := &User{}
+	err := db.Where("mail", mailbox).First(user).Error
 	if err != nil {
 		return nil, err
 	}

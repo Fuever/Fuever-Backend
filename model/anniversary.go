@@ -1,14 +1,14 @@
 package model
 
 type Anniversary struct {
-	ID       int    `gorm:"primaryKey;autoIncrement"`
-	AdminID  int    `gorm:"column:admin_id;index;not null"`
-	Title    string `gorm:"varchar(128);not null"`
-	Content  string `gorm:"text:not null"`
-	Start    int64  `gorm:"not null"`
-	End      int64  `gorm:"not null"`
-	Location string `gorm:"varchar(128);not null"`
-	Cover    string `gorm:"varchar(128)"`
+	ID        int     `gorm:"primaryKey;autoIncrement"`
+	AdminID   int     `gorm:"column:admin_id;index;not null"`
+	Title     string  `gorm:"varchar(128);not null"`
+	Content   string  `gorm:"text:not null"`
+	Start     int64   `gorm:"not null"`
+	End       int64   `gorm:"not null"`
+	PositionX float64 `gorm:"position_x;not null"`
+	PositionY float64 `gorm:"position_y;not null"`
 }
 
 func CreateAnniversary(anniversary *Anniversary) error {
