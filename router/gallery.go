@@ -94,6 +94,33 @@ func CreateGallery(ctx *gin.Context) {
 	return
 }
 
-func DeleteGallery(ctx *gin.Context) {
+type DeleteGalleryRequest struct {
+	ID int `json:"id" binding:"required"`
+}
 
+func DeleteGallery(ctx *gin.Context) {
+	adminID := ctx.GetInt("adminID")
+	req := &DeleteGalleryRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	gallery, err := model.GetGalleryByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	if gallery.AuthorID != adminID {
+		// 不是创建者 不允许删除
+		ctx.JSON(http.StatusForbidden, gin.H{})
+		return
+	}
+	err = model.DeleteGalleryID(req.ID)
+	if err != nil {
+		// 找不到记录
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
 }
