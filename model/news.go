@@ -1,12 +1,12 @@
 package model
 
 type News struct {
-	ID         int    `gorm:"primaryKey;autoIIncrement"`
-	AuthorID   int    `gorm:"column:author_id;not null;index"`
-	Title      string `gorm:"varchar(128);not null"` // 我觉得这个地方要建一个索引啊
-	Content    string `gorm:"text;not null"`
-	CreateTime int64  `gorm:"column:created_time"`
-	Cover      string `gorm:"varchar(128)"` // 新闻的封面
+	ID         int    `gorm:"primaryKey;autoIIncrement" json:"id"`
+	AuthorID   int    `gorm:"column:author_id;not null;index" json:"author_id"`
+	Title      string `gorm:"varchar(128);not null" json:"title"` // 我觉得这个地方要建一个索引啊
+	Content    string `gorm:"text;not null" json:"content"`
+	CreateTime int64  `gorm:"column:created_time" json:"create_time"`
+	Cover      string `gorm:"varchar(128)" json:"cover"` // 新闻的封面
 }
 
 func CreateNews(_new *News) error {
@@ -35,7 +35,7 @@ func GetNewsByID(id int) (*News, error) {
 
 func GetNewsWithOffsetLimit(offset int, limit int) ([]*News, error) {
 	news := make([]*News, 0)
-	err := db.Offset(offset).Limit(limit).Find(&news).Error
+	err := db.Select("id", "author_id", "title", "created_time", "cover").Offset(offset).Limit(limit).Find(&news).Error
 	if err != nil {
 		return nil, err
 	}
@@ -66,4 +66,41 @@ func DeleteNewByID(id int) error {
 		return err
 	}
 	return nil
+}
+
+type NewsInfo struct {
+	News
+	AuthorName string `json:"author_name,omitempty"`
+}
+
+func GetNewsInfo(newsID int) (*NewsInfo, error) {
+	news, err := GetNewsByID(newsID)
+	if err != nil {
+		return nil, err
+	}
+	admin, err := GetAdminByID(news.AuthorID)
+	info := &NewsInfo{
+		News:       *news,
+		AuthorName: "",
+	}
+	if err != nil {
+		// 创建者销号了
+		return info, nil
+	}
+	info.AuthorName = admin.Name
+	return info, nil
+}
+
+func GetNewsesInfo(offset int, limit int) ([]*NewsInfo, error) {
+	info := make([]*NewsInfo, 0)
+	err := db.Model(&News{}).
+		Select("news.id, news.author_id, title,content, created_time, cover, admins.name as author_name").
+		Joins("join admins on news.author_id=admins.id").
+		Offset(offset).
+		Limit(limit).
+		Scan(&info).Error
+	if err != nil {
+		return nil, err
+	}
+	return info, nil
 }

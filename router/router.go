@@ -35,6 +35,8 @@ func InitRoute(g *gin.Engine) {
 				admin.PUT("/news", UpdateNews)
 				admin.DELETE("/news", DeleteNews)
 
+				admin.POST("/block", CreateNewBlock)
+
 				admin.POST("/img", UploadImage)
 			}
 
@@ -86,6 +88,11 @@ func InitRoute(g *gin.Engine) {
 			{
 				post.GET("/b/:block_id", GetAllPosts)
 				post.GET("/p/:id", GetSpecifyPost)
+			}
+
+			block := pub.Group("/block")
+			{
+				block.GET("/", GetBlockList)
 			}
 
 		}

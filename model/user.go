@@ -72,3 +72,7 @@ func DeleteUserByID(id int) error {
 	}
 	return nil
 }
+
+func IsIDBelongToUser(id int) bool {
+	return id < 2_000_000_000
+}

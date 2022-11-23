@@ -16,7 +16,7 @@ func CreateAdmin(admin *Admin) error {
 
 func GetAdminByID(id int) (*Admin, error) {
 	admin := &Admin{ID: id}
-	err := db.Find(admin).Error
+	err := db.First(admin).Error
 	if err != nil {
 		return nil, err
 	}
@@ -24,10 +24,8 @@ func GetAdminByID(id int) (*Admin, error) {
 }
 
 func GetAdminByName(name string) (*Admin, error) {
-	admin := &Admin{
-		Name: name,
-	}
-	err := db.First(admin).Error
+	admin := &Admin{}
+	err := db.Where("name", name).First(admin).Error
 	if err != nil {
 		return nil, err
 	}
@@ -48,4 +46,8 @@ func DeleteAdminByID(id int) error {
 		return err
 	}
 	return nil
+}
+
+func IsIDBelongToAdmin(id int) bool {
+	return id >= 2_000_000_000
 }
