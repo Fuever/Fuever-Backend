@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"github.com/go-redis/redis/v8"
 	"log"
+	"os"
 	"strconv"
 	"time"
 )
@@ -13,6 +14,7 @@ import (
 var (
 	redisClient *redis.Client
 	ctx         context.Context
+	_addr       = os.Getenv("FUEVER_CACHE")
 )
 
 const (
@@ -81,7 +83,7 @@ func RemoveTokenFromCache(userID int) {
 // InitTokenCache 初始化redis连接
 func InitTokenCache() {
 	redisClient = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     _addr + ":6379",
 		Password: "",
 		DB:       0,
 	})
