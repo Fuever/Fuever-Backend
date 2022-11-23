@@ -7,7 +7,7 @@ type Gallery struct {
 	Content    string  `gorm:"text;not null"`
 	Cover      string  `gorm:"cover;not null"`
 	CreateTime int64   `gorm:"create_time;not null"`
-	PostID     int     `gorm:"post_id;not null"`
+	PostID     int     `gorm:"post_id;not null"` // 关联的帖子
 	PositionX  float64 `gorm:"position_x;not null"`
 	PositionY  float64 `gorm:"position_y;not null"`
 }
