@@ -107,7 +107,7 @@ func UserLogin(ctx *gin.Context) {
 	}
 	user, err := model.GetUserByMailbox(req.Mailbox)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{})
+		ctx.JSON(http.StatusForbidden, gin.H{})
 		return
 	}
 	if !repassword.CheckPasswordHash(req.Password, user.Password) {

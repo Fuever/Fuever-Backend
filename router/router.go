@@ -35,6 +35,14 @@ func InitRoute(g *gin.Engine) {
 				admin.PUT("/news", UpdateNews)
 				admin.DELETE("/news", DeleteNews)
 
+				gallery := admin.Group("/gallery")
+				{
+					gallery.POST("/", CreateGallery)
+					gallery.DELETE("/", DeleteGallery)
+				}
+
+				admin.POST("/block", CreateNewBlock)
+
 				admin.POST("/img", UploadImage)
 			}
 
@@ -82,10 +90,21 @@ func InitRoute(g *gin.Engine) {
 				anniv.GET("/:id", GetSpecifyAnniversary)
 			}
 
+			gallery := pub.Group("/gallery")
+			{
+				gallery.GET("/", GetAllGalleries)
+				gallery.GET("/:id", GetSpecifyGallery)
+			}
+
 			post := pub.Group("/posts")
 			{
 				post.GET("/b/:block_id", GetAllPosts)
 				post.GET("/p/:id", GetSpecifyPost)
+			}
+
+			block := pub.Group("/block")
+			{
+				block.GET("/", GetBlockList)
 			}
 
 		}

@@ -39,6 +39,7 @@ func InitDB() {
 		&Post{},
 		&News{},
 		&Block{},
+		&Gallery{},
 	)
 	if err != nil {
 		panic(err)

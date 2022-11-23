@@ -1,7 +1,7 @@
 package router
 
 import (
-	"Fuever/model"
+	"Fuever/service"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -20,7 +20,7 @@ func GetSpecifyNews(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
-	news, err := model.GetNewsByID(req.ID)
+	news, err := service.GetNews(req.ID)
 	if err != nil {
 		// 返回为空
 		ctx.JSON(http.StatusNotFound, gin.H{})
@@ -28,7 +28,6 @@ func GetSpecifyNews(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": news})
 	return
-
 }
 
 // GetAllNews 不需要任何认证
@@ -41,7 +40,7 @@ func GetAllNews(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
-	newses, err := model.GetNewsWithOffsetLimit(offset, limit)
+	newses, err := service.GetNewses(offset, limit)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			// 如果错误是记录不存在

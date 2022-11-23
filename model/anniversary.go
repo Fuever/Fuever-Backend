@@ -64,3 +64,44 @@ func DeleteAnniversaryByID(id int) error {
 	}
 	return nil
 }
+
+type AnniversaryInfo struct {
+	Anniversary
+	AuthorName string `json:"author_name,omitempty"`
+}
+
+func GetAnniversaryInfoByID(id int) (*AnniversaryInfo, error) {
+	anniv, err := GetAnniversaryByID(id)
+	if err != nil {
+		return nil, err
+	}
+	authorName := ""
+	admin, err := GetAdminByID(anniv.AdminID)
+	if err == nil {
+		authorName = admin.Name
+	}
+	info := &AnniversaryInfo{
+		Anniversary: *anniv,
+		AuthorName:  authorName,
+	}
+	return info, nil
+}
+func GetAnniversariesInfoWithOffsetLimit(offset int, limit int) ([]*AnniversaryInfo, error) {
+	annivInfo := make([]*AnniversaryInfo, 0)
+	err := db.Model(&Anniversary{}).Select("anniversaries.id, " +
+		"anniversaries.admin_id, " +
+		"anniversaries.title, " + // 不返回content?
+		"anniversaries.start, " +
+		"anniversaries.end," +
+		"anniversaries.position_x, " +
+		"anniversaries.position_y, " +
+		"admins.name").
+		Joins("join admins on admins.id=anniversaries.author_id").
+		Offset(offset).
+		Limit(limit).
+		Scan(&annivInfo).Error
+	if err != nil {
+		return nil, err
+	}
+	return annivInfo, nil
+}
