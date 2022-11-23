@@ -31,8 +31,24 @@ func GetComments(postID int, offset int, limit int) ([]*CommentInfo, error) {
 				authorName = user.Nickname
 			} else {
 				// 如果查不到这个信息 就说明发评论的销号了
-				// 那么author id 返回-1
-				message.AuthorID = -1
+				m[message.AuthorID] = &model.User{
+					ID:           0,
+					Mail:         "",
+					Password:     "",
+					Username:     "",
+					Nickname:     "",
+					Avatar:       "",
+					StudentID:    0,
+					Phone:        0,
+					Gender:       false,
+					Age:          0,
+					Job:          "",
+					EntranceTime: 0,
+					ClassID:      0,
+					Residence:    "",
+				}
+				// 填空值作缓存
+				// 避免每次销号都重新查一遍表
 			}
 		}
 		comments[i] = &CommentInfo{

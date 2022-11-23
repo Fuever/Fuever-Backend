@@ -101,19 +101,19 @@ func GetSpecifyPost(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
-	post, err := model.GetPostByID(uriReq.ID)
+	postInfo, err := service.GetPost(uriReq.ID)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{})
 		return
 	}
-	comments, err := service.GetComments(post.ID, queryReq.Offset, queryReq.Limit)
+	comments, err := service.GetComments(postInfo.ID, queryReq.Offset, queryReq.Limit)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		ctx.JSON(http.StatusInternalServerError, gin.H{})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": gin.H{
-			"post":    post,
+			"post":    postInfo,
 			"comment": comments,
 		},
 	})

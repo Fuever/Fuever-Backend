@@ -47,3 +47,7 @@ func DeleteAdminByID(id int) error {
 	}
 	return nil
 }
+
+func IsIDBelongToAdmin(id int) bool {
+	return id >= 2_000_000_000
+}

@@ -19,7 +19,6 @@ func GetNews(newsID int) (*NewsInfo, error) {
 	}
 	if err != nil {
 		// 创建者销号了
-		info.AuthorID = -1
 		return info, nil
 	}
 	info.AuthorName = admin.Name
