@@ -1,7 +1,7 @@
 package router
 
 import (
-	"Fuever/model"
+	"Fuever/service"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -20,7 +20,7 @@ func GetSpecifyAnniversary(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
-	news, err := model.GetAnniversaryByID(req.ID)
+	news, err := service.GetAnniversary(req.ID)
 	if err != nil {
 		// 返回为空
 		ctx.JSON(http.StatusNotFound, gin.H{})
@@ -41,7 +41,7 @@ func GetAllAnniversaries(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
-	newses, err := model.GetAnniversariesWithOffsetLimit(offset, limit)
+	anniv, err := service.GetAnniversaries(offset, limit)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			// 如果错误是记录不存在
@@ -53,7 +53,7 @@ func GetAllAnniversaries(ctx *gin.Context) {
 		log.Println(err)
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"data": newses})
+	ctx.JSON(http.StatusOK, gin.H{"data": anniv})
 	return
 }
 
