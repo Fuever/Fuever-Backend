@@ -3,6 +3,10 @@ on: [ push ]
 jobs:
   unit-test:
     runs-on: ubuntu-latest
+    env:
+      FUEVER_GO: fuever_go
+      FUEVER_DB: localhost
+      FUEVER_CACHE: localhost
     services:
       postgres:
         image: postgres
