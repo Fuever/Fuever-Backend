@@ -32,5 +32,5 @@ func GenerateTest(ctx *gin.Context) {
 	})
 	if err != nil {
 		panic(err)
-	}g
+	}
 }
