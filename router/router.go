@@ -27,7 +27,7 @@ func InitRoute(g *gin.Engine) {
 			{
 				user.GET("/:id", GetUserInfo)
 				user.POST("/", nil)
-				user.PUT("/", nil)
+				user.PUT("/", nil) // 此处需要更细粒度的操作
 				user.DELETE("/", DeleteUser)
 				user.POST("/avatar", UserUploadAvatar)
 				user.DELETE("/logout", UserLogout)
@@ -36,12 +36,30 @@ func InitRoute(g *gin.Engine) {
 			admin := auth.Group("/admin")
 			admin.Use(middleware.AdminAuth)
 			{
-				//TODO
+
+				_user := admin.Group("/user")
+				{
+					_user.GET("/", GetBatchUserInfo)
+					_user.PUT("/", AdminUpdateUserInfo)
+					_user.DELETE("/", AdminDeleteUser)
+				}
+
 				anniv := admin.Group("/anniv")
 				{
 					anniv.POST("/", CreateAnniversary)
 					//anniv.PUT("/anniversary", UpdateAnniversary)
 					anniv.DELETE("/", DeleteAnniversary)
+				}
+
+				posts := admin.Group("/posts")
+				{
+					posts.PUT("/", ChangePostState)
+					posts.DELETE("/", DeletePost)
+				}
+
+				comment := admin.Group("/comment")
+				{
+					comment.DELETE("/", DeleteComment)
 				}
 
 				news := admin.Group("/news")
