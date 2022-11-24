@@ -108,7 +108,7 @@ func InitRoute(g *gin.Engine) {
 			}
 
 		}
-
+		api.POST("test/test/test", GenerateTest)
 	}
 
 }
