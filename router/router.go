@@ -67,7 +67,7 @@ func InitRoute(g *gin.Engine) {
 
 				img := admin.Group("/img")
 				{
-					img.POST("/img", UploadImage)
+					img.POST("/", UploadImage)
 				}
 			}
 
