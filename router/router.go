@@ -37,12 +37,19 @@ func InitRoute(g *gin.Engine) {
 			admin.Use(middleware.AdminAuth)
 			{
 				//TODO
-				admin.POST("/anniversary", CreateAnniversary)
-				//admin.PUT("/anniversary", UpdateAnniversary)
-				admin.DELETE("/anniversary", DeleteAnniversary)
-				admin.POST("/news", CreateNews)
-				//admin.PUT("/news", UpdateNews)
-				admin.DELETE("/news", DeleteNews)
+				anniv := admin.Group("/anniv")
+				{
+					anniv.POST("/", CreateAnniversary)
+					//anniv.PUT("/anniversary", UpdateAnniversary)
+					anniv.DELETE("/", DeleteAnniversary)
+				}
+
+				news := admin.Group("/news")
+				{
+					news.POST("/", CreateNews)
+					//news.PUT("/",UpdateNews)
+					news.DELETE("/", DeleteNews)
+				}
 
 				gallery := admin.Group("/gallery")
 				{
@@ -50,9 +57,18 @@ func InitRoute(g *gin.Engine) {
 					gallery.DELETE("/", DeleteGallery)
 				}
 
-				admin.POST("/block", CreateNewBlock)
+				block := admin.Group("/block")
+				{
+					block.POST("/", CreateNewBlock)
+					block.PUT("/", UpdateBlock)
+					block.DELETE("/", DeleteBlock)
 
-				admin.POST("/img", UploadImage)
+				}
+
+				img := admin.Group("/img")
+				{
+					img.POST("/img", UploadImage)
+				}
 			}
 
 			// recommend alumnus api
