@@ -9,8 +9,8 @@ import (
 func InitRoute(g *gin.Engine) {
 
 	api := g.Group("/api")
+	api.Use(cors.Default())
 	{
-		api.Use(cors.Default())
 		auth := api.Group("/auth")
 		{
 			user := auth.Group("/user")
