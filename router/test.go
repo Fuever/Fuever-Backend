@@ -10,7 +10,7 @@ import (
 func GenerateTest(ctx *gin.Context) {
 	err := model.CreateAdmin(&model.Admin{
 		Name:     "1234567",
-		Password: "1234567",
+		Password: repassword.GeneratePasswordHash("1234567"),
 	})
 	if err != nil {
 		panic(err)
