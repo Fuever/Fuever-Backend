@@ -1,12 +1,14 @@
 package router
 
 import (
+	"Fuever/model"
 	"Fuever/service"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type GetNewsRequest struct {
@@ -56,9 +58,34 @@ func GetAllNews(ctx *gin.Context) {
 	return
 }
 
+type CreateNewsRequest struct {
+	Title   string `json:"title" binding:"required"`
+	Content string `json:"content" binding:"required"`
+	Cover   string `json:"cover" binding:"required"`
+}
+
 // CreateNews need Admin Auth
 func CreateNews(ctx *gin.Context) {
-
+	adminID := ctx.GetInt("adminID")
+	req := &CreateNewsRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	news := &model.News{
+		AuthorID:   adminID,
+		Title:      req.Title,
+		Content:    req.Content,
+		CreateTime: time.Now().Unix(),
+		Cover:      req.Cover,
+	}
+	err := model.CreateNews(news)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
 }
 
 // UpdateNews need Admin Auth
@@ -66,7 +93,35 @@ func UpdateNews(ctx *gin.Context) {
 
 }
 
+type DeleteNewsRequest struct {
+	ID int `form:"id" binding:"required"`
+}
+
 // DeleteNews need Admin Auth
 func DeleteNews(ctx *gin.Context) {
-
+	adminID := ctx.GetInt("adminID")
+	req := &DeleteGalleryRequest{}
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	news, err := model.GetNewsByID(req.ID)
+	if err != nil {
+		// 该条记录不存在
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	if adminID != news.AuthorID {
+		// 不是作者捏
+		ctx.JSON(http.StatusForbidden, gin.H{})
+		return
+	}
+	err = model.DeleteNewsByID(req.ID)
+	if err != nil {
+		// 记录不存在的话不会到这个地方捏
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
 }

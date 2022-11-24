@@ -33,7 +33,7 @@ func GetNewsByID(id int) (*News, error) {
 	return _new, nil
 }
 
-func GetNewsWithOffsetLimit(offset int, limit int) ([]*News, error) {
+func GetNewsesWithOffsetLimit(offset int, limit int) ([]*News, error) {
 	news := make([]*News, 0)
 	err := db.Select("id", "author_id", "title", "created_time", "cover").Offset(offset).Limit(limit).Find(&news).Error
 	if err != nil {
@@ -42,7 +42,7 @@ func GetNewsWithOffsetLimit(offset int, limit int) ([]*News, error) {
 	return news, nil
 }
 
-func GetNewsByAuthorIDWIthOffsetLimit(authorID int, offset int, limit int) ([]*News, error) {
+func GetNewsesByAuthorIDWIthOffsetLimit(authorID int, offset int, limit int) ([]*News, error) {
 	news := make([]*News, 0)
 	err := db.Offset(offset).Limit(limit).Where(&News{AuthorID: authorID}).Find(&news).Error
 	if err != nil {
@@ -52,7 +52,7 @@ func GetNewsByAuthorIDWIthOffsetLimit(authorID int, offset int, limit int) ([]*N
 
 }
 
-func UpdateNew(_new *News) error {
+func UpdateNews(_new *News) error {
 	err := db.Omit("ID").Where("id = ?", _new.ID).Updates(_new).Error
 	if err != nil {
 		return err
@@ -60,7 +60,7 @@ func UpdateNew(_new *News) error {
 	return nil
 }
 
-func DeleteNewByID(id int) error {
+func DeleteNewsByID(id int) error {
 	err := db.Delete(&News{}, id).Error
 	if err != nil {
 		return err
