@@ -229,3 +229,82 @@ func CreateComment(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{})
 	return
 }
+
+type ChangePostStateRequest struct {
+	ID    int `json:"id" binding:"required"`
+	State int `json:"state" binding:"required"`
+}
+
+func ChangePostState(ctx *gin.Context) {
+	req := &ChangePostStateRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	if req.State < 0 || req.State > 2 {
+		// 不为正常状态
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	post, err := model.GetPostByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	post.State = req.State
+	err = model.UpdatePost(post)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}
+
+type DeletePostRequest struct {
+	ID int `json:"id" binding:"required"`
+}
+
+func DeletePost(ctx *gin.Context) {
+	req := &DeletePostRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	post, err := model.GetPostByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	err = model.DeletePostByID(post.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}
+
+type DeleteCommentRequest struct {
+	ID int `json:"id" binding:"required"`
+}
+
+func DeleteComment(ctx *gin.Context) {
+	req := &DeleteCommentRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	msg, err := model.GetMessageByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	err = model.DeleteMessageByID(msg.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}

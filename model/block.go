@@ -61,8 +61,5 @@ func GetBlockAndAuthorNameWithLimitOffset(limit int, offset int) ([]*BlockInfo, 
 		Offset(offset).
 		Limit(limit).
 		Scan(&info).Error
-	if err != nil {
-		return nil, err
-	}
-	return info, nil
+	return info, err
 }

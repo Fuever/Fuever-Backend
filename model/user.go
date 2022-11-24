@@ -76,3 +76,9 @@ func DeleteUserByID(id int) error {
 func IsIDBelongToUser(id int) bool {
 	return id < 2_000_000_000
 }
+
+func GetUserWithOffsetLimit(offset int, limit int) ([]*User, error) {
+	users := make([]*User, 0)
+	err := db.Select("").Offset(offset).Limit(limit).Find(&users).Error
+	return users, err
+}

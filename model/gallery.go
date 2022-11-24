@@ -40,11 +40,7 @@ func GetAllGalleries() ([]*Gallery, error) {
 				"cover").
 		Find(&galleries).
 		Error
-	if err != nil {
-		return nil, err
-	}
-	return galleries, nil
-
+	return galleries, err
 }
 
 func DeleteGalleryID(id int) error {

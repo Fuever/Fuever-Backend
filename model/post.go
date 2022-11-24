@@ -51,10 +51,7 @@ func GetTopPostsWithOffsetLimit(blockID int, offset int, limit int) ([]*Post, er
 func GetPostsByAuthorIDWIthOffsetLimit(authorID int, limit int) ([]*Post, error) {
 	posts := make([]*Post, 0)
 	err := db.Limit(limit).Where(&Post{AuthorID: authorID}).Find(&posts).Error
-	if err != nil {
-		return nil, err
-	}
-	return posts, nil
+	return posts, err
 
 }
 
@@ -77,8 +74,5 @@ func DeletePostByID(id int) error {
 func getParticularStatePostWithOffsetLimit(blockID int, state int, offset int, limit int) ([]*Post, error) {
 	posts := make([]*Post, 0)
 	err := db.Where(&Post{State: state, BlockID: blockID}).Offset(offset).Limit(limit).Order("updated_time desc").Find(&posts).Error
-	if err != nil {
-		return nil, err
-	}
-	return posts, nil
+	return posts, err
 }

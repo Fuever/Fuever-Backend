@@ -100,8 +100,5 @@ func GetAnniversariesInfoWithOffsetLimit(offset int, limit int) ([]*AnniversaryI
 		Offset(offset).
 		Limit(limit).
 		Scan(&annivInfo).Error
-	if err != nil {
-		return nil, err
-	}
-	return annivInfo, nil
+	return annivInfo, err
 }

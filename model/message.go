@@ -27,22 +27,25 @@ func CreateMessage(message *Message) error {
 //	return messages, nil
 //}
 
-func GetMessageByPostIDWithOffsetLimit(postID int, offset int, limit int) ([]*Message, error) {
-	messages := make([]*Message, 0)
-	err := db.Where("post_id = ?", postID).Offset(offset).Limit(limit).Find(&messages).Error
+func GetMessageByID(id int) (*Message, error) {
+	msg := &Message{ID: id}
+	err := db.Find(msg).Error
 	if err != nil {
 		return nil, err
 	}
-	return messages, nil
+	return msg, err
+}
+
+func GetMessageByPostIDWithOffsetLimit(postID int, offset int, limit int) ([]*Message, error) {
+	messages := make([]*Message, 0)
+	err := db.Where("post_id = ?", postID).Offset(offset).Limit(limit).Find(&messages).Error
+	return messages, err
 }
 
 func GetMessageByAuthorIDWithOffsetLimit(authorID int, offset int, limit int) ([]*Message, error) {
 	messages := make([]*Message, 0)
 	err := db.Where("author_id = ?", authorID).Offset(offset).Limit(limit).Find(&messages).Error
-	if err != nil {
-		return nil, err
-	}
-	return messages, nil
+	return messages, err
 }
 
 func DeleteMessageByID(id int) error {

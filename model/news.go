@@ -36,10 +36,7 @@ func GetNewsByID(id int) (*News, error) {
 func GetNewsesWithOffsetLimit(offset int, limit int) ([]*News, error) {
 	news := make([]*News, 0)
 	err := db.Select("id", "author_id", "title", "created_time", "cover").Offset(offset).Limit(limit).Find(&news).Error
-	if err != nil {
-		return nil, err
-	}
-	return news, nil
+	return news, err
 }
 
 func GetNewsesByAuthorIDWIthOffsetLimit(authorID int, offset int, limit int) ([]*News, error) {

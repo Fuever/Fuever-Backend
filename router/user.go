@@ -217,6 +217,11 @@ func GetUserInfo(ctx *gin.Context) {
 	return
 }
 
+func UserUpdateInfo(ctx *gin.Context) {
+
+}
+
+// DeleteUser 用户自己注销
 func DeleteUser(ctx *gin.Context) {
 	userID := ctx.GetInt("userID")
 	// 缓存要先清除
@@ -230,12 +235,100 @@ func DeleteUser(ctx *gin.Context) {
 	return
 }
 
-// GetStudentAuthMessage 从这个接口获取验证数据
-func GetStudentAuthMessage(ctx *gin.Context) {
-
+type GetBatchUserInfoRequest struct {
+	Offset int `form:"offset, default=0"`
+	Limit  int `form:"limit" binding:"required"`
 }
 
-// UserStudentAuth 然后在这个接口验证
-func UserStudentAuth(ctx *gin.Context) {
+func GetBatchUserInfo(ctx *gin.Context) {
+	req := GetBatchUserInfoRequest{}
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	users, err := model.GetUserWithOffsetLimit(req.Offset, req.Limit)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	usersInfo := make([]*UserInfo, len(users))
+	for i := 0; i < len(users); i++ {
+		usersInfo[i] = &UserInfo{
+			ID:           users[i].ID,
+			Mail:         users[i].Mail,
+			Nickname:     users[i].Nickname,
+			Username:     users[i].Username,
+			Avatar:       users[i].Avatar,
+			StudentID:    users[i].StudentID,
+			Phone:        users[i].Phone,
+			Gender:       users[i].Gender,
+			Age:          users[i].Age,
+			Job:          users[i].Job,
+			EntranceTime: users[i].EntranceTime,
+			ClassID:      users[i].ClassID,
+			Residence:    users[i].Residence,
+		}
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": usersInfo,
+	})
+	return
+}
 
+func AdminUpdateUserInfo(ctx *gin.Context) {
+	req := UserInfo{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	user, err := model.GetUserByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	user.Nickname = req.Nickname
+	user.Username = req.Username
+	user.Gender = req.Gender
+	user.StudentID = req.StudentID
+	user.Phone = req.Phone
+	user.Mail = req.Mail
+	user.Age = req.Age
+	user.Job = req.Job
+	user.Avatar = req.Avatar
+	user.ClassID = req.ClassID
+	user.Residence = req.Residence
+	user.EntranceTime = req.EntranceTime
+	err = model.UpdateUser(user)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}
+
+type AdminDeleteUserRequest struct {
+	ID int `json:"id" binding:"required"`
+}
+
+func AdminDeleteUser(ctx *gin.Context) {
+	req := &AdminDeleteUserRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	user, err := model.GetUserByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	// 缓存要先清除
+	service.Logout(user.ID)
+	err = model.DeleteUserByID(user.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
 }
