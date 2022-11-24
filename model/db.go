@@ -5,10 +5,12 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
+	"os"
 )
 
+var _host = os.Getenv("FUEVER_DB")
+
 const (
-	_host         = "localhost"
 	_user         = "fuever"
 	_password     = "fuever"
 	_databaseName = "fuever"
