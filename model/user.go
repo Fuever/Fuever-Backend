@@ -58,7 +58,7 @@ func GetUsersByStudentID(studentID int) ([]*User, error) {
 }
 
 func UpdateUser(user *User) error {
-	err := db.Omit("ID").Where("id = ?", user.ID).Updates(user).Error
+	err := db.Where("id = ?", user.ID).Updates(user).Error
 	if err != nil {
 		return err
 	}

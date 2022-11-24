@@ -3,7 +3,7 @@ package model
 type Block struct {
 	ID       int    `gorm:"primaryKey;autoIncrement" json:"id"`
 	Title    string `gorm:"varchar(128);not null;uniqueIndex" json:"title"`
-	AuthorID int    `gorm:"column:author_id;not null;index" json:"authorID"`
+	AuthorID int    `gorm:"column:author_id;not null;index" json:"author_id"`
 }
 
 func CreateBlock(block *Block) error {
@@ -33,7 +33,7 @@ func GetBlockByID(id int) (*Block, error) {
 }
 
 func UpdateBlock(block *Block) error {
-	err := db.Omit("ID").Where("id = ?", block.ID).Updates(block).Error
+	err := db.Where("id = ?", block.ID).Updates(block).Error
 	if err != nil {
 		return err
 	}

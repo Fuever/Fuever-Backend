@@ -58,3 +58,52 @@ func CreateNewBlock(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{})
 	return
 }
+
+type UpdateBlockRequest struct {
+	ID    int    `json:"id"    binding:"required"`
+	Title string `json:"title" binding:"required"`
+}
+
+func UpdateBlock(ctx *gin.Context) {
+	req := &UpdateBlockRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	block, err := model.GetBlockByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	block.Title = req.Title
+	if err := model.UpdateBlock(block); err != nil {
+		ctx.JSON(http.StatusConflict, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}
+
+type DeleteBlockRequest struct {
+	ID int `json:"id"    binding:"required"`
+}
+
+func DeleteBlock(ctx *gin.Context) {
+	req := &DeleteBlockRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	block, err := model.GetBlockByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	err = model.DeleteBlockByID(block.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}
