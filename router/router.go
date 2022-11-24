@@ -38,10 +38,10 @@ func InitRoute(g *gin.Engine) {
 			{
 				//TODO
 				admin.POST("/anniversary", CreateAnniversary)
-				admin.PUT("/anniversary", UpdateAnniversary)
+				//admin.PUT("/anniversary", UpdateAnniversary)
 				admin.DELETE("/anniversary", DeleteAnniversary)
 				admin.POST("/news", CreateNews)
-				admin.PUT("/news", UpdateNews)
+				//admin.PUT("/news", UpdateNews)
 				admin.DELETE("/news", DeleteNews)
 
 				gallery := admin.Group("/gallery")
