@@ -47,8 +47,8 @@ func GenerateTest() {
 		model.CreatePost(&model.Post{
 			AuthorID:    1,
 			Title:       strconv.Itoa(rand.Int()),
-			CreatedTime: time.Now().Unix(),
-			UpdatedTime: time.Now().Unix(),
+			CreatedTime: time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
+			UpdatedTime: time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
 			State:       0,
 			BlockID:     rand.Intn(17),
 			IsLock:      false,
@@ -60,28 +60,36 @@ func GenerateTest() {
 			AuthorID:    1,
 			Content:     strconv.Itoa(rand.Int()),
 			PostID:      rand.Intn(114),
-			CreatedTime: time.Now().Unix(),
+			CreatedTime: time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
 		})
 	}
 
 	for i := 0; i < 17; i++ {
+		bytes := make([]byte, 100)
+		rand.Read(bytes)
+		contents := make([]byte, 100)
+		rand.Read(contents)
 		model.CreateAnniversary(&model.Anniversary{
 			AdminID:   2000000000,
-			Title:     strconv.Itoa(rand.Int()),
-			Content:   strconv.Itoa(rand.Int()),
-			Start:     rand.Int63(),
-			End:       rand.Int63(),
+			Title:     string(bytes),
+			Content:   string(contents) + "\n" + string(contents) + "\n" + string(contents),
+			Start:     time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
+			End:       time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
 			PositionX: rand.Float64(),
 			PositionY: rand.Float64(),
 		})
 	}
 
 	for i := 0; i < 27; i++ {
+		bytes := make([]byte, 100)
+		rand.Read(bytes)
+		contents := make([]byte, 100)
+		rand.Read(contents)
 		model.CreateNews(&model.News{
 			AuthorID:   2000000000,
-			Title:      strconv.Itoa(rand.Int()),
-			Content:    strconv.Itoa(rand.Int()),
-			CreateTime: rand.Int63(),
+			Title:      string(bytes),
+			Content:    string(contents) + "\n" + string(contents) + "\n" + string(contents),
+			CreateTime: time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
 			Cover:      "???",
 		})
 	}
