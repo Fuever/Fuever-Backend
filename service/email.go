@@ -54,10 +54,10 @@ func SendVerifyCodeToUserMailbox(mailbox string) error {
 		return nil
 	}
 	verifyCode := generateMailboxVerifyCode()
-	hasMailboxBeenSent[mailbox] = time.Now().Unix() + expireTime.Milliseconds()
+	hasMailboxBeenSent[mailbox] = time.Now().Unix() + int64(expireTime.Seconds())
 	verifyCodeMap[verifyCode] = &verifyCodeInfo{
 		mailbox: mailbox,
-		expired: time.Now().Unix() + expireTime.Milliseconds(),
+		expired: time.Now().Unix() + int64(expireTime.Seconds()),
 	}
 	return mail.SendEmail(mailbox, getContent(verifyCode))
 }
