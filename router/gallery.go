@@ -95,13 +95,13 @@ func CreateGallery(ctx *gin.Context) {
 }
 
 type DeleteGalleryRequest struct {
-	ID int `json:"id" binding:"required"`
+	ID int `uri:"id" binding:"required"`
 }
 
 func DeleteGallery(ctx *gin.Context) {
 	adminID := ctx.GetInt("adminID")
 	req := &DeleteGalleryRequest{}
-	if err := ctx.ShouldBindJSON(req); err != nil {
+	if err := ctx.ShouldBindUri(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}

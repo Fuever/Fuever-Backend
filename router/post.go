@@ -284,12 +284,12 @@ func ChangePostState(ctx *gin.Context) {
 }
 
 type DeletePostRequest struct {
-	ID int `json:"id" binding:"required"`
+	ID int `uri:"id" binding:"required"`
 }
 
 func DeletePost(ctx *gin.Context) {
 	req := &DeletePostRequest{}
-	if err := ctx.ShouldBindJSON(req); err != nil {
+	if err := ctx.ShouldBindUri(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
@@ -308,12 +308,12 @@ func DeletePost(ctx *gin.Context) {
 }
 
 type DeleteCommentRequest struct {
-	ID int `json:"id" binding:"required"`
+	ID int `uri:"id" binding:"required"`
 }
 
 func DeleteComment(ctx *gin.Context) {
 	req := &DeleteCommentRequest{}
-	if err := ctx.ShouldBindJSON(req); err != nil {
+	if err := ctx.ShouldBindUri(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}

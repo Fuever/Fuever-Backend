@@ -99,14 +99,14 @@ func UpdateAnniversary(ctx *gin.Context) {
 }
 
 type DeleteAnniversaryRequest struct {
-	ID int `form:"id" binding:"required"`
+	ID int `uri:"id" binding:"required"`
 }
 
 // DeleteAnniversary need Admin Auth
 func DeleteAnniversary(ctx *gin.Context) {
 	adminID := ctx.GetInt("adminID")
 	req := &DeleteGalleryRequest{}
-	if err := ctx.ShouldBindQuery(req); err != nil {
+	if err := ctx.ShouldBindUri(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}

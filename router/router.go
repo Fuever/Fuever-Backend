@@ -7,7 +7,7 @@ import (
 
 func InitRoute(g *gin.Engine) {
 
-	GenerateTest()
+	//GenerateTest()
 
 	g.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -43,45 +43,45 @@ func InitRoute(g *gin.Engine) {
 				{
 					_user.GET("/", GetBatchUserInfo)
 					_user.PUT("/", AdminUpdateUserInfo)
-					_user.DELETE("/", AdminDeleteUser)
+					_user.DELETE("/:id", AdminDeleteUser)
 				}
 
 				anniv := admin.Group("/anniv")
 				{
 					anniv.POST("/", CreateAnniversary)
 					//anniv.PUT("/anniversary", UpdateAnniversary)
-					anniv.DELETE("/", DeleteAnniversary)
+					anniv.DELETE("/:id", DeleteAnniversary)
 				}
 
 				posts := admin.Group("/posts")
 				{
 					posts.PUT("/", ChangePostState)
-					posts.DELETE("/", DeletePost)
+					posts.DELETE("/:id", DeletePost)
 				}
 
 				comment := admin.Group("/comment")
 				{
-					comment.DELETE("/", DeleteComment)
+					comment.DELETE("/:id", DeleteComment)
 				}
 
 				news := admin.Group("/news")
 				{
 					news.POST("/", CreateNews)
 					//news.PUT("/",UpdateNews)
-					news.DELETE("/", DeleteNews)
+					news.DELETE("/:id", DeleteNews)
 				}
 
 				gallery := admin.Group("/gallery")
 				{
 					gallery.POST("/", CreateGallery)
-					gallery.DELETE("/", DeleteGallery)
+					gallery.DELETE("/:id", DeleteGallery)
 				}
 
 				block := admin.Group("/block")
 				{
 					block.POST("/", CreateNewBlock)
 					block.PUT("/", UpdateBlock)
-					block.DELETE("/", DeleteBlock)
+					block.DELETE("/:id", DeleteBlock)
 
 				}
 

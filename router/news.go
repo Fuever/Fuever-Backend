@@ -94,14 +94,14 @@ func UpdateNews(ctx *gin.Context) {
 }
 
 type DeleteNewsRequest struct {
-	ID int `form:"id" binding:"required"`
+	ID int `uri:"id" binding:"required"`
 }
 
 // DeleteNews need Admin Auth
 func DeleteNews(ctx *gin.Context) {
 	adminID := ctx.GetInt("adminID")
 	req := &DeleteGalleryRequest{}
-	if err := ctx.ShouldBindQuery(req); err != nil {
+	if err := ctx.ShouldBindUri(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}

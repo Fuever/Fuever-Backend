@@ -85,12 +85,12 @@ func UpdateBlock(ctx *gin.Context) {
 }
 
 type DeleteBlockRequest struct {
-	ID int `json:"id"    binding:"required"`
+	ID int `uri:"id"    binding:"required"`
 }
 
 func DeleteBlock(ctx *gin.Context) {
 	req := &DeleteBlockRequest{}
-	if err := ctx.ShouldBindJSON(req); err != nil {
+	if err := ctx.ShouldBindUri(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
