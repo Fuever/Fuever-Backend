@@ -65,14 +65,10 @@ func GenerateTest() {
 	}
 
 	for i := 0; i < 17; i++ {
-		bytes := make([]byte, 100)
-		rand.Read(bytes)
-		contents := make([]byte, 100)
-		rand.Read(contents)
 		model.CreateAnniversary(&model.Anniversary{
 			AdminID:   2000000000,
-			Title:     string(bytes),
-			Content:   string(contents) + "\n" + string(contents) + "\n" + string(contents),
+			Title:     "我是标题" + strconv.Itoa(rand.Int()),
+			Content:   "我是标题" + strconv.Itoa(rand.Int()) + "\n" + strconv.Itoa(rand.Int()) + "\n" + strconv.Itoa(rand.Int()),
 			Start:     time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
 			End:       time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
 			PositionX: rand.Float64(),
@@ -87,8 +83,8 @@ func GenerateTest() {
 		rand.Read(contents)
 		model.CreateNews(&model.News{
 			AuthorID:   2000000000,
-			Title:      string(bytes),
-			Content:    string(contents) + "\n" + string(contents) + "\n" + string(contents),
+			Title:      "我是标题" + strconv.Itoa(rand.Int()),
+			Content:    "我是标题" + strconv.Itoa(rand.Int()) + "\n" + strconv.Itoa(rand.Int()) + "\n" + strconv.Itoa(rand.Int()),
 			CreateTime: time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
 			Cover:      "???",
 		})
