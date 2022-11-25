@@ -79,6 +79,6 @@ func IsIDBelongToUser(id int) bool {
 
 func GetUserWithOffsetLimit(offset int, limit int) ([]*User, error) {
 	users := make([]*User, 0)
-	err := db.Select("").Offset(offset).Limit(limit).Find(&users).Error
+	err := db.Offset(offset).Limit(limit).Find(&users).Error
 	return users, err
 }

@@ -4,6 +4,7 @@ import (
 	"Fuever/util/mail"
 	"fmt"
 	"math/rand"
+	"regexp"
 	"time"
 )
 
@@ -78,6 +79,12 @@ func generateMailboxVerifyCode() int {
 
 	}
 	return -1
+}
+
+var _reg = regexp.MustCompile(`^[A-Za-z0-9]+([_\.][A-Za-z0-9]+)*@([A-Za-z0-9\-]+\.)+[A-Za-z]{2,6}$`)
+
+func IsLegalMailbox(mailbox string) bool {
+	return 0 != len(_reg.FindAllString(mailbox, -1))
 }
 
 func init() {

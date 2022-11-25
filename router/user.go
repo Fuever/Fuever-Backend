@@ -27,6 +27,10 @@ func SendEmailVerifyCode(ctx *gin.Context) {
 		ctx.JSON(http.StatusForbidden, gin.H{})
 		return
 	}
+	if !service.IsLegalMailbox(req.Mailbox) {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
 	_, err := model.GetUserByMailbox(req.Mailbox)
 	if err != gorm.ErrRecordNotFound {
 		// 如果这条记录可见 说明已存在该用户
@@ -241,7 +245,7 @@ type GetBatchUserInfoRequest struct {
 }
 
 func GetBatchUserInfo(ctx *gin.Context) {
-	req := GetBatchUserInfoRequest{}
+	req := &GetBatchUserInfoRequest{}
 	if err := ctx.ShouldBindQuery(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
