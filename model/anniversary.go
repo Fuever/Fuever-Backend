@@ -1,14 +1,14 @@
 package model
 
 type Anniversary struct {
-	ID        int     `gorm:"primaryKey;autoIncrement"`
-	AdminID   int     `gorm:"column:admin_id;index;not null"`
-	Title     string  `gorm:"varchar(128);not null"`
-	Content   string  `gorm:"text:not null"`
-	Start     int64   `gorm:"not null"`
-	End       int64   `gorm:"not null"`
-	PositionX float64 `gorm:"position_x;not null"`
-	PositionY float64 `gorm:"position_y;not null"`
+	ID        int     `gorm:"primaryKey;autoIncrement" json:"id"`
+	AdminID   int     `gorm:"column:admin_id;index;not null" json:"admin_id"`
+	Title     string  `gorm:"varchar(128);not null" json:"title"`
+	Content   string  `gorm:"text:not null" json:"content"`
+	Start     int64   `gorm:"not null" json:"start"`
+	End       int64   `gorm:"not null" json:"end"`
+	PositionX float64 `gorm:"position_x;not null" json:"position_x"`
+	PositionY float64 `gorm:"position_y;not null" json:"position_y"`
 }
 
 func CreateAnniversary(anniversary *Anniversary) error {
@@ -96,7 +96,7 @@ func GetAnniversariesInfoWithOffsetLimit(offset int, limit int) ([]*AnniversaryI
 		"anniversaries.position_x, " +
 		"anniversaries.position_y, " +
 		"admins.name").
-		Joins("join admins on admins.id=anniversaries.author_id").
+		Joins("join admins on admins.id=anniversaries.admin_id").
 		Offset(offset).
 		Limit(limit).
 		Scan(&annivInfo).Error

@@ -50,6 +50,18 @@ func GetPosts(blockID int, offset int, limit int) ([]*PostInfo, error) {
 	if err != nil {
 		return nil, err
 	}
+	return convertToPostInfo(posts)
+}
+
+func GetAllPost(offset int, limit int) ([]*PostInfo, error) {
+	posts, err := model.GetAllNormalPostsWithOffsetLimit(offset, limit)
+	if err != nil {
+		return nil, err
+	}
+	return convertToPostInfo(posts)
+}
+
+func convertToPostInfo(posts []*model.Post) ([]*PostInfo, error) {
 	// author id map to admin/user
 	m := make(map[int]struct {
 		AuthorName   string

@@ -7,7 +7,7 @@ import (
 
 func InitRoute(g *gin.Engine) {
 
-	GenerateTest()
+	//GenerateTest()
 
 	g.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -143,7 +143,8 @@ func InitRoute(g *gin.Engine) {
 
 			post := pub.Group("/posts")
 			{
-				post.GET("/b/:block_id", GetAllPosts)
+				post.GET("/", GetAllPosts)
+				post.GET("/b/:block_id", GetPostsWithBlockID)
 				post.GET("/p/:id", GetSpecifyPost)
 			}
 
