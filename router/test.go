@@ -86,8 +86,22 @@ func GenerateTest() {
 			Title:      "我是标题" + strconv.Itoa(rand.Int()),
 			Content:    "我是标题" + strconv.Itoa(rand.Int()) + "\n" + strconv.Itoa(rand.Int()) + "\n" + strconv.Itoa(rand.Int()),
 			CreateTime: time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
-			Cover:      "???",
+			Cover:      "https://fuever-1313037799.cos.ap-nanjing.myqcloud.com/1669256053941570786.jpg",
 		})
+	}
+
+	for i := 0; i < 17; i++ {
+		gallery := &model.Gallery{
+			AuthorID:   2000000000,
+			Title:      "我是标题" + strconv.Itoa(rand.Int()),
+			Content:    "我是标题" + strconv.Itoa(rand.Int()) + "\n" + strconv.Itoa(rand.Int()) + "\n" + strconv.Itoa(rand.Int()),
+			Cover:      "https://fuever-1313037799.cos.ap-nanjing.myqcloud.com/1669256053941570786.jpg",
+			CreateTime: time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
+			PostID:     rand.Intn(100),
+			PositionX:  rand.Float64(),
+			PositionY:  rand.Float64(),
+		}
+		model.CreateGallery(gallery)
 	}
 
 }
