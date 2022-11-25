@@ -7,6 +7,8 @@ import (
 
 func InitRoute(g *gin.Engine) {
 
+	GenerateTest()
+
 	g.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -151,7 +153,6 @@ func InitRoute(g *gin.Engine) {
 			}
 
 		}
-		api.POST("test/test/test", GenerateTest)
 	}
 
 }
