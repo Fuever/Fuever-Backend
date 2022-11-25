@@ -106,7 +106,7 @@ func convertToPostInfo(posts []*model.Post) ([]*PostInfo, error) {
 				}
 			} else {
 				// 发帖人是用户
-				user, err := model.GetUserByID(info.ID)
+				user, err := model.GetUserByID(post.AuthorID)
 				if err != nil {
 					// 用户已注销
 					m[post.AuthorID] = struct {
