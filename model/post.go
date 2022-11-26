@@ -38,23 +38,20 @@ func GetPostByID(id int) (*Post, error) {
 
 func GetTopAndNormalPostWithOffsetLimit(offset int, limit int) ([]*Post, error) {
 	posts := make([]*Post, 0)
-	err := db.Where("state = ?", _top).
-		Or("state = ?", _normal).
+	err := db.Where("state = ? or state = ?", _top, _normal).
 		Offset(offset).
 		Limit(limit).
-		Order("updated_time desc, state desc").
+		Order("state desc ,updated_time desc").
 		Find(&posts).Error
 	return posts, err
 }
 
 func GetTopAndNormalPostByBlockIDWithOffsetLimit(blockID int, offset int, limit int) ([]*Post, error) {
 	posts := make([]*Post, 0)
-	err := db.Where("state = ?", _top).
-		Where("block_id = ?", blockID).
-		Or("state = ?", _normal).
+	err := db.Where("(state = ? or state = ?) and block_id = ?", _top, _normal, blockID).
 		Offset(offset).
 		Limit(limit).
-		Order("updated_time desc, state desc").
+		Order("state desc ,updated_time desc").
 		Find(&posts).Error
 	return posts, err
 }

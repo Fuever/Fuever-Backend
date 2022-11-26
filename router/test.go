@@ -49,7 +49,7 @@ func GenerateTest() {
 			Title:       strconv.Itoa(rand.Int()),
 			CreatedTime: time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
 			UpdatedTime: time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
-			State:       0,
+			State:       rand.Intn(3) / 2 * 2,
 			BlockID:     rand.Intn(17),
 			IsLock:      false,
 		})
