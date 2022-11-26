@@ -46,7 +46,7 @@ func GetPost(postID int) (*PostInfo, error) {
 }
 
 func GetPosts(blockID int, offset int, limit int) ([]*PostInfo, error) {
-	posts, err := model.GetNormalPostsWithOffsetLimit(blockID, offset, limit)
+	posts, err := model.GetTopAndNormalPostByBlockIDWithOffsetLimit(blockID, offset, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func GetPosts(blockID int, offset int, limit int) ([]*PostInfo, error) {
 }
 
 func GetAllPost(offset int, limit int) ([]*PostInfo, error) {
-	posts, err := model.GetAllNormalPostsWithOffsetLimit(offset, limit)
+	posts, err := model.GetTopAndNormalPostWithOffsetLimit(offset, limit)
 	if err != nil {
 		return nil, err
 	}
