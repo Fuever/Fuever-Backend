@@ -108,7 +108,7 @@ type SpecifyPostRequest struct {
 }
 
 type GetSpecifyPostQueryRequest struct {
-	Offset int `form:"offset;default=0"`
+	Offset int `form:"offset,default=0"`
 	Limit  int `form:"limit" binding:"required"`
 }
 

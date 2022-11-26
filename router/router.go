@@ -7,7 +7,7 @@ import (
 
 func InitRoute(g *gin.Engine) {
 
-	GenerateTest()
+	//GenerateTest()
 
 	g.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
