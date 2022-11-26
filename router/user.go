@@ -336,3 +336,11 @@ func AdminDeleteUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{})
 	return
 }
+
+func GetUserID(ctx *gin.Context) {
+	userID := ctx.GetInt("userID")
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": userID,
+	})
+	return
+}

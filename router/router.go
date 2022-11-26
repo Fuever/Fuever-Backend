@@ -18,6 +18,7 @@ func InitRoute(g *gin.Engine) {
 			user.Use(middleware.UserAuth)
 			{
 				user.GET("/:id", GetUserInfo)
+				user.GET("/r", GetUserID)
 				user.POST("/", nil)
 				user.PUT("/", nil) // 此处需要更细粒度的操作
 				user.DELETE("/", DeleteUser)
