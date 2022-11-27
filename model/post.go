@@ -114,6 +114,12 @@ func getParticularStatePostsWithOffsetLimit(state int, offset int, limit int) ([
 	err := db.Where(&Post{State: state}).Offset(offset).Limit(limit).Order("updated_time desc").Find(&posts).Error
 	return posts, err
 }
+func GetFuzzyPostWithOffsetLimit(str string, offset int, limit int) ([]*Post, error) {
+	posts := make([]*Post, 0)
+	err := db.Where("title LIKE ?", "%"+str+"%").Offset(offset).Limit(limit).Find(&posts).Error
+	return posts, err
+
+}
 
 func GetCommentNumberByID(postID int) (int64, error) {
 	cnt := int64(0)

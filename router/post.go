@@ -327,6 +327,33 @@ func DeletePost(ctx *gin.Context) {
 	return
 }
 
+type SearchPostRequest struct {
+	Word   string `form:"word" binding:"required"`
+	Offset int    `form:"offset, default=0"`
+	Limit  int    `form:"limit" binding:"required"`
+}
+
+func SearchPost(ctx *gin.Context) {
+	req := &SearchPostRequest{}
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	info, err := service.GetPostsWithFuzzyStringOffsetLimit(req.Word, req.Offset, req.Limit)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			ctx.JSON(http.StatusNotFound, gin.H{})
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": info,
+	})
+	return
+}
+
 type DeleteCommentRequest struct {
 	ID int `uri:"id" binding:"required"`
 }

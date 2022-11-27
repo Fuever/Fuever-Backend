@@ -67,6 +67,14 @@ func GetAllPost(offset int, limit int) ([]*PostInfo, error) {
 	return convertToPostInfo(posts)
 }
 
+func GetPostsWithFuzzyStringOffsetLimit(fuzzyString string, offset int, limit int) ([]*PostInfo, error) {
+	posts, err := model.GetFuzzyPostWithOffsetLimit(fuzzyString, offset, limit)
+	if err != nil {
+		return nil, err
+	}
+	return convertToPostInfo(posts)
+}
+
 func convertToPostInfo(posts []*model.Post) ([]*PostInfo, error) {
 	// author id map to admin/user
 	m := make(map[int]struct {

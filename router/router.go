@@ -7,7 +7,7 @@ import (
 
 func InitRoute(g *gin.Engine) {
 
-	GenerateTest()
+	//GenerateTest()
 
 	g.Use(middleware.Cors)
 	api := g.Group("/api")
@@ -134,6 +134,7 @@ func InitRoute(g *gin.Engine) {
 
 			post := pub.Group("/posts")
 			{
+				post.GET("/search", SearchPost)
 				post.GET("/", GetAllPosts)
 				post.GET("/b/:block_id", GetPostsWithBlockID)
 				post.GET("/p/:id", GetSpecifyPost)
