@@ -40,7 +40,7 @@ func InitRoute(g *gin.Engine) {
 				anniv := admin.Group("/anniv")
 				{
 					anniv.POST("/", CreateAnniversary)
-					//anniv.PUT("/anniversary", UpdateAnniversary)
+					anniv.PUT("/", UpdateAnniversary)
 					anniv.DELETE("/:id", DeleteAnniversary)
 				}
 

@@ -93,9 +93,41 @@ func CreateAnniversary(ctx *gin.Context) {
 	return
 }
 
+type UpdateAnniversaryRequest struct {
+	ID        int     `json:"id" binding:"required"`
+	Title     string  `json:"title" binding:"required"`
+	Content   string  `json:"content" binding:"required"`
+	Start     int64   `json:"start" binding:"required"`
+	End       int64   `json:"end" binding:"required"`
+	PositionX float64 `json:"position_x" binding:"required"`
+	PositionY float64 `json:"position_y" binding:"required"`
+}
+
 // UpdateAnniversary need Admin Auth
 func UpdateAnniversary(ctx *gin.Context) {
-
+	req := &model.Anniversary{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	anniv, err := service.GetAnniversary(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	anniv.Title = req.Title
+	anniv.Content = req.Content
+	anniv.Start = req.Start
+	anniv.End = req.End
+	anniv.PositionX = req.PositionX
+	anniv.PositionY = req.PositionY
+	err = model.UpdateAnniversaryByID(&anniv.Anniversary)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
 }
 
 type DeleteAnniversaryRequest struct {

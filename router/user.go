@@ -280,7 +280,7 @@ func GetBatchUserInfo(ctx *gin.Context) {
 }
 
 func AdminUpdateUserInfo(ctx *gin.Context) {
-	req := UserInfo{}
+	req := &UserInfo{}
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
