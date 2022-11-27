@@ -36,30 +36,34 @@ func GenerateTest() {
 		panic(err)
 	}
 
-	for i := 0; i < 17; i++ {
+	blockNumber := 5
+	postNumber := 300
+	commentNumber := 5000
+
+	for i := 0; i < blockNumber; i++ {
 		model.CreateBlock(&model.Block{
 			Title:    strconv.Itoa(rand.Int()),
 			AuthorID: 2000000000,
 		})
 	}
-	//TODO 说起来 评论更新帖子最后更新时间我还没写
-	for i := 0; i < 114; i++ {
+
+	for i := 0; i < postNumber; i++ {
 		model.CreatePost(&model.Post{
 			AuthorID:    1,
 			Title:       strconv.Itoa(rand.Int()),
 			CreatedTime: time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
 			UpdatedTime: time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
 			State:       rand.Intn(3) / 2 * 2,
-			BlockID:     rand.Intn(17),
+			BlockID:     rand.Intn(blockNumber),
 			IsLock:      false,
 		})
 	}
 
-	for i := 0; i < 500; i++ {
+	for i := 0; i < commentNumber; i++ {
 		model.CreateMessage(&model.Message{
 			AuthorID:    1,
 			Content:     strconv.Itoa(rand.Int()),
-			PostID:      rand.Intn(114),
+			PostID:      rand.Intn(postNumber),
 			CreatedTime: time.Now().Unix() + int64(rand.Intn(114)*int(time.Second.Seconds())),
 		})
 	}
