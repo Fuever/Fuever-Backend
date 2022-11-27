@@ -7,7 +7,7 @@ import (
 
 func InitRoute(g *gin.Engine) {
 
-	GenerateTest()
+	//GenerateTest()
 
 	g.Use(middleware.Cors)
 	api := g.Group("/api")

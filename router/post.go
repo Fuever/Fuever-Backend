@@ -235,15 +235,35 @@ func CreateComment(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
+	now := time.Now().Unix()
 	postID := uriReq.ID
 	content := sensitive.GetFilter().ReplaceSensitiveWord(req.Content, "*")
 	comment := &model.Message{
 		AuthorID:    userID,
 		Content:     content,
 		PostID:      postID,
-		CreatedTime: time.Now().Unix(),
+		CreatedTime: now,
 	}
-	err := model.CreateMessage(comment)
+	///* 这地方要查2次表 */
+	//// 确保被插入帖子的评论存在
+	post, err := model.GetPostByID(comment.PostID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	post.UpdatedTime = now
+	err = model.UpdatePost(post)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	///****************/
+	//err := model.UpdatePostUpdatedTimeByID(comment.PostID, now)
+	//if err != nil {
+	//	ctx.JSON(http.StatusInternalServerError, gin.H{})
+	//	return
+	//}
+	err = model.CreateMessage(comment)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{})
 		return

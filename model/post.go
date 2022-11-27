@@ -84,11 +84,15 @@ func GetPostsByAuthorIDWIthOffsetLimit(authorID int, limit int) ([]*Post, error)
 }
 
 func UpdatePost(post *Post) error {
-	err := db.Omit("ID").Where("id = ?", post.ID).Updates(post).Error
+	err := db.Where("id = ?", post.ID).Updates(post).Error
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func UpdatePostUpdatedTimeByID(postID int, now int64) error {
+	return db.Model(&Post{}).Where("id = ?", postID).Update("updated_time", now).Error
 }
 
 func DeletePostByID(id int) error {

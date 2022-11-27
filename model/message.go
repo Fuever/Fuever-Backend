@@ -38,7 +38,7 @@ func GetMessageByID(id int) (*Message, error) {
 
 func GetMessageByPostIDWithOffsetLimit(postID int, offset int, limit int) ([]*Message, error) {
 	messages := make([]*Message, 0)
-	err := db.Where("post_id = ?", postID).Offset(offset).Limit(limit).Order("created_time").Find(&messages).Error
+	err := db.Where("post_id = ?", postID).Offset(offset).Limit(limit).Order("created_time desc").Find(&messages).Error
 	return messages, err
 }
 

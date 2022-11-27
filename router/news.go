@@ -88,9 +88,35 @@ func CreateNews(ctx *gin.Context) {
 	return
 }
 
+type UpdateNewsRequest struct {
+	ID      int    `json:"id" binding:"required"`
+	Title   string `json:"title" binding:"required"`
+	Content string `json:"content" binding:"required"`
+	Cover   string `json:"cover" binding:"required"`
+}
+
 // UpdateNews need Admin Auth
 func UpdateNews(ctx *gin.Context) {
-
+	req := &UpdateNewsRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	news, err := model.GetNewsByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	news.Title = req.Title
+	news.Content = req.Content
+	news.Cover = req.Cover
+	err = model.UpdateNews(news)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
 }
 
 type DeleteNewsRequest struct {
