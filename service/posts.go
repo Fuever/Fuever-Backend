@@ -4,8 +4,9 @@ import "Fuever/model"
 
 type PostInfo struct {
 	model.Post
-	AuthorName   string `json:"author_name,omitempty"`
-	AuthorAvatar string `json:"author_avatar,omitempty"`
+	AuthorName    string `json:"author_name,omitempty"`
+	AuthorAvatar  string `json:"author_avatar,omitempty"`
+	CommentNumber int    `json:"comment_number"`
 }
 
 func GetPost(postID int) (*PostInfo, error) {
@@ -14,10 +15,15 @@ func GetPost(postID int) (*PostInfo, error) {
 		// err not record be found
 		return nil, err
 	}
+	cnt, err := model.GetCommentNumberByID(postID)
+	if err != nil {
+		return nil, err
+	}
 	info := &PostInfo{
-		Post:         *post,
-		AuthorName:   "",
-		AuthorAvatar: "",
+		Post:          *post,
+		AuthorName:    "",
+		AuthorAvatar:  "",
+		CommentNumber: int(cnt),
 	}
 	if model.IsIDBelongToAdmin(info.AuthorID) {
 		// 发帖人是管理员

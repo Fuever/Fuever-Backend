@@ -114,3 +114,8 @@ func getParticularStatePostsWithOffsetLimit(state int, offset int, limit int) ([
 	err := db.Where(&Post{State: state}).Offset(offset).Limit(limit).Order("updated_time desc").Find(&posts).Error
 	return posts, err
 }
+
+func GetCommentNumberByID(postID int) (int64, error) {
+	cnt := int64(0)
+	return cnt, db.Model(&Message{}).Where(&Message{PostID: postID}).Count(&cnt).Error
+}
