@@ -58,7 +58,7 @@ func InitRoute(g *gin.Engine) {
 				news := admin.Group("/news")
 				{
 					news.POST("/", CreateNews)
-					//news.PUT("/",UpdateNews)
+					news.PUT("/", UpdateNews)
 					news.DELETE("/:id", DeleteNews)
 				}
 
