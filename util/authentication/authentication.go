@@ -2,7 +2,10 @@ package authentication
 
 import (
 	"Fuever/resource"
+	"crypto/md5"
+	"encoding/hex"
 	"math/rand"
+	"strconv"
 )
 
 // GenerateStudentAuthMessage
@@ -43,6 +46,11 @@ func GenerateStudentAuthMessage(studentNumber int, studentName string) ([]string
 		// 不住人吗
 		return nil, false
 	}
+	hash := md5.Sum([]byte(strconv.Itoa(studentNumber)))
+	hashString := hex.EncodeToString(hash[:8])
+	// 这里不会出错的
+	num, _ := strconv.ParseInt(hashString, 16, 64)
+	rand.Seed(num) // 固定策略
 	for len(stuNameMap) < 16 {
 		// 有可能会重复
 		// 所以只好写while啦
