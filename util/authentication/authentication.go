@@ -5,48 +5,87 @@ import (
 	"math/rand"
 )
 
-func RandInt(lim int) int { //随机生成一个0~lim-1的整数
-	return rand.Int() % lim
+// GenerateStudentAuthMessage
+// 根据学号返回验证信息
+// @return  待验证的一组姓名
+func GenerateStudentAuthMessage(studentNumber int, studentName string) ([]string, bool) {
+	stuNameMap := make(map[string]bool, 0)
+
+	stuMessage, flag := resource.StudentMessages()[studentNumber]
+	if !flag {
+		// 学号不存在于这个表中
+		return nil, false
+	}
+	if stuMessage.Name != studentName {
+		// 名字和学号对不上
+		return nil, false
+	}
+	key := resource.GenerateDormitoryMapKey(stuMessage.Building, stuMessage.Dormitory)
+	roommateArray, flag := resource.DormitoryMessages()[key]
+	if !flag {
+		// 这人是没舍友的家伙啊 我能怎么办呢
+		// TODO 这里可能要开一个管理员审核通道
+		return nil, false
+	}
+	for _, roommate := range roommateArray {
+		// 注意不要直接用原来的数组
+		// 会改变资源里的值
+		// 说到底到底为什么不能immutable啊
+		if roommate.Name == stuMessage.Name {
+			// 本人不在验证集合的考虑范围内
+			continue
+		}
+		stuNameMap[roommate.Name] = true
+	}
+	stuArray, flag := resource.BuildingMessages()[stuMessage.Building]
+	if !flag || len(stuArray) < 13 {
+		// 这栋楼是什么啊？
+		// 不住人吗
+		return nil, false
+	}
+	for len(stuNameMap) < 16 {
+		randomStu := stuArray[rand.Int()%len(stuArray)]
+		stuNameMap[randomStu.Name] = true
+	}
+	res := make([]string, 0)
+	for k := range stuNameMap {
+		res = append(res, k)
+	}
+	return res, true
 }
 
-func Count(array []*resource.StudentMessage, student resource.StudentMessage) bool { //查找该学生是否已在列表内
-	for _, value := range array {
-		if *value == student {
-			return true
+func CheckStudentAuthMessage(studentNumber int, studentName string, roommates []string) bool {
+	stuMessage, flag := resource.StudentMessages()[studentNumber]
+	if !flag {
+		// 学号不存在于这个表中
+		return false
+	}
+	if stuMessage.Name != studentName {
+		// 名字和学号对不上
+		return false
+	}
+	key := resource.GenerateDormitoryMapKey(stuMessage.Building, stuMessage.Dormitory)
+	correctRoommatesArray := resource.DormitoryMessages()[key]
+	if len(correctRoommatesArray)-1 != len(roommates) {
+		// 除去本人外人数都对不上
+		return false
+	}
+	correctRoommatesMap := make(map[string]bool, 0)
+	for _, roommate := range correctRoommatesArray {
+		correctRoommatesMap[roommate.Name] = true
+	}
+	roommatesRoommatesMap := make(map[string]bool, 0)
+	for _, roommate := range roommates {
+		roommatesRoommatesMap[roommate] = true
+	}
+	if len(correctRoommatesMap)-1 != len(roommatesRoommatesMap) {
+		// 避免重名
+		return false
+	}
+	for k := range roommatesRoommatesMap {
+		if _, exist := correctRoommatesMap[k]; !exist {
+			return false
 		}
 	}
-	return false
-}
-
-func GenerateAuthenticationList(visitor resource.StudentMessage) []*resource.StudentMessage {
-	studentMessageArray := resource.StudentMessages()     //获取学生信息
-	dormitoryMessageArray := resource.DormitoryMessages() //获取宿舍信息
-	var randomList []*resource.StudentMessage             //随机学生序列，共9位
-	//处理同宿舍随机
-	key := resource.GenerateHash(visitor)
-	roomieList := dormitoryMessageArray[key]
-	numberOfRoomie := len(roomieList)      //宿舍人数
-	countInside := RandInt(numberOfRoomie) //随机同一宿舍内的舍友数量：0～3
-	for i := 0; i < countInside; {
-		index := RandInt(numberOfRoomie)
-		if *roomieList[index] != visitor && !Count(randomList, *roomieList[index]) { //避免重复加入信息
-			randomList = append(randomList, roomieList[index])
-			i++ //成功加入随机列表
-		}
-	}
-	//处理不同宿舍随机
-	countOutside := 9 - countInside             //不同宿舍的学生数量,满足countInside+countOutside=9
-	numberOfStudent := len(studentMessageArray) //学生数量
-	for i := 0; i < countOutside; {
-		index := RandInt(numberOfStudent)
-		if *studentMessageArray[index] != visitor && !Count(randomList, *studentMessageArray[index]) { //避免重复加入信息
-			randomList = append(randomList, studentMessageArray[index])
-			i++ //成功加入随机列表
-		}
-	}
-	//打乱随机序列
-	rand.Shuffle(len(randomList), func(i, j int) { //随机打乱
-		randomList[i], randomList[j] = randomList[j], randomList[i]
-	})
-	return randomList
+	return true
 }
