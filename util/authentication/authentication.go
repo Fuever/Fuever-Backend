@@ -44,6 +44,8 @@ func GenerateStudentAuthMessage(studentNumber int, studentName string) ([]string
 		return nil, false
 	}
 	for len(stuNameMap) < 16 {
+		// 有可能会重复
+		// 所以只好写while啦
 		randomStu := stuArray[rand.Int()%len(stuArray)]
 		stuNameMap[randomStu.Name] = true
 	}

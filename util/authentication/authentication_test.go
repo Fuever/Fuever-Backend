@@ -1,12 +1,11 @@
 package authentication
 
 import (
-	"fmt"
 	"testing"
-	"time"
 )
 
 func TestAuthentication(t *testing.T) {
-	year, month, day := time.Now().Date()
-	fmt.Println(year, int(month), day)
+	// 这测试...
+	// 感觉拿谁做demo都不好啊
+	// 读到这行注释的你愿意吗?
 }
