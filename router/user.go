@@ -378,3 +378,73 @@ func GetUserID(ctx *gin.Context) {
 	})
 	return
 }
+
+type GetStudentAuthMessageRequest struct {
+	Name          string `form:"name" binding:"required"`
+	StudentNumber int    `form:"student_number" binding:"required"`
+}
+
+// GetStudentAuthMessage
+// 获取验证信息
+func GetStudentAuthMessage(ctx *gin.Context) {
+	userID := ctx.GetInt("userID")
+
+	req := &GetStudentAuthMessageRequest{}
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	arr, flag := service.GenerateStudentAuthMessage(userID, req.StudentNumber, req.Name)
+	if !flag {
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": gin.H{
+			"name_array": arr,
+		},
+	})
+}
+
+type AuthStudentIdentityRequest struct {
+	Name          string   `json:"name" binding:"required"`
+	StudentNumber int      `json:"student_number" binding:"required"`
+	Roommates     []string `json:"roommates" binding:"required"`
+}
+
+// AuthStudentIdentity
+// 验证是不是本校的学生
+func AuthStudentIdentity(ctx *gin.Context) {
+	userID := ctx.GetInt("userID")
+	req := &AuthStudentIdentityRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	isAuthSucceed, isOverStep := service.CheckStudentAuthMessage(userID, req.StudentNumber, req.Name, req.Roommates)
+	if isOverStep || !isAuthSucceed {
+		// 验证失败 或是 请求太多次
+		// 所以茶壶不能烧咖啡
+		// 以后别再这么做了
+		ctx.JSON(http.StatusTeapot, gin.H{})
+		return
+	}
+	user, err := model.GetUserByID(userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	user.Username = req.Name
+	user.StudentID = req.StudentNumber
+	err = model.UpdateUser(user)
+	if err != nil {
+		// 这个已经被人验证过了啊?
+		// 怎么又来一遍还能对啊
+		// 爬
+		ctx.JSON(http.StatusConflict, gin.H{})
+		return
+	}
+	// 终于验证成功了
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
+}

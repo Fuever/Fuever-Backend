@@ -7,7 +7,7 @@ import (
 
 func InitRoute(g *gin.Engine) {
 
-	GenerateTest()
+	//GenerateTest()
 
 	g.Use(middleware.Cors)
 	api := g.Group("/api")
@@ -19,11 +19,13 @@ func InitRoute(g *gin.Engine) {
 			{
 				user.GET("/:id", GetUserInfo)
 				user.GET("/r", GetUserID)
-				user.POST("/", nil)
 				user.PUT("/", UserUpdateInfo)
 				user.DELETE("/", DeleteUser)
 				user.POST("/avatar", UserUploadAvatar)
 				user.DELETE("/logout", UserLogout)
+
+				user.GET("/stu/auth", GetStudentAuthMessage)
+				user.POST("/stu/auth", AuthStudentIdentity)
 			}
 
 			admin := auth.Group("/admin")

@@ -64,6 +64,8 @@ func GenerateStudentAuthMessage(studentNumber int, studentName string) ([]string
 	return res, true
 }
 
+// CheckStudentAuthMessage
+// @return 验证成功返回true 反之为false
 func CheckStudentAuthMessage(studentNumber int, studentName string, roommates []string) bool {
 	stuMessage, flag := resource.StudentMessages()[studentNumber]
 	if !flag {
