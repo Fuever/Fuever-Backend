@@ -19,11 +19,13 @@ func InitRoute(g *gin.Engine) {
 			{
 				user.GET("/:id", GetUserInfo)
 				user.GET("/r", GetUserID)
-				user.POST("/", nil)
-				user.PUT("/", nil) // 此处需要更细粒度的操作
+				user.PUT("/", UserUpdateInfo)
 				user.DELETE("/", DeleteUser)
 				user.POST("/avatar", UserUploadAvatar)
 				user.DELETE("/logout", UserLogout)
+
+				user.GET("/stu/auth", GetStudentAuthMessage)
+				user.POST("/stu/auth", AuthStudentIdentity)
 			}
 
 			admin := auth.Group("/admin")

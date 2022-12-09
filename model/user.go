@@ -7,7 +7,7 @@ type User struct {
 	Username     string `gorm:"index;varchar(32);"` // 真名需要验证
 	Nickname     string `gorm:"index;varchar(32)"`
 	Avatar       string `gorm:"varchar(64)"`
-	StudentID    int    `gorm:"column:student_id;uniqueIndex"` // 这地方加索引好像会比较好 但是问题在于不应该为空
+	StudentID    int    `gorm:"column:student_id;uniqueIndex"` //未验证时为空
 	Phone        int    `gorm:"uniqueIndex"`
 	Gender       bool
 	Age          int
