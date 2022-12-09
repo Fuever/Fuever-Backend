@@ -221,8 +221,42 @@ func GetUserInfo(ctx *gin.Context) {
 	return
 }
 
-func UserUpdateInfo(ctx *gin.Context) {
+type UserUpdateInfoRequest struct {
+	Nickname     string `json:"nickname"`
+	Phone        int    `json:"phone"`
+	Gender       bool   `json:"gender"`
+	Age          int    `json:"age"`
+	Job          string `json:"job"`
+	EntranceTime int64  `json:"entrance_time"`
+	Residence    string `json:"residence"`
+}
 
+func UserUpdateInfo(ctx *gin.Context) {
+	userID := ctx.GetInt("userID")
+	req := &UserUpdateInfoRequest{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	user, err := model.GetUserByID(userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	user.Nickname = req.Nickname
+	user.Phone = req.Phone
+	user.Gender = req.Gender
+	user.Age = req.Age
+	user.Job = req.Job
+	user.EntranceTime = req.EntranceTime
+	user.Residence = req.Residence
+	err = model.UpdateUser(user)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
+	return
 }
 
 // DeleteUser 用户自己注销

@@ -20,7 +20,7 @@ func InitRoute(g *gin.Engine) {
 				user.GET("/:id", GetUserInfo)
 				user.GET("/r", GetUserID)
 				user.POST("/", nil)
-				user.PUT("/", nil) // 此处需要更细粒度的操作
+				user.PUT("/", UserUpdateInfo)
 				user.DELETE("/", DeleteUser)
 				user.POST("/avatar", UserUploadAvatar)
 				user.DELETE("/logout", UserLogout)
@@ -58,7 +58,7 @@ func InitRoute(g *gin.Engine) {
 				news := admin.Group("/news")
 				{
 					news.POST("/", CreateNews)
-					//news.PUT("/",UpdateNews)
+					news.PUT("/", UpdateNews)
 					news.DELETE("/:id", DeleteNews)
 				}
 
