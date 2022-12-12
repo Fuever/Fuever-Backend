@@ -55,7 +55,9 @@ func GenerateStudentAuthMessage(studentNumber int, studentName string) ([]string
 		// 有可能会重复
 		// 所以只好写while啦
 		randomStu := stuArray[rand.Int()%len(stuArray)]
-		stuNameMap[randomStu.Name] = true
+		if randomStu.Name != stuMessage.Name {
+			stuNameMap[randomStu.Name] = true
+		}
 	}
 	res := make([]string, 0)
 	for k := range stuNameMap {
