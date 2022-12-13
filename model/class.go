@@ -1,5 +1,7 @@
 package model
 
+import "errors"
+
 type Class struct {
 	ID        int    `gorm:"primaryKey;autoIncrement"`
 	ClassName string `gorm:"class_name;index;not null"`
@@ -7,11 +9,20 @@ type Class struct {
 }
 
 func CreateClass(class *Class) error {
-	err := db.Create(class).Error
-	if err != nil {
-		return err
+	cnt := int64(0)
+	db.Model(&Class{}).
+		Where("class_name = ? and student_id = ?", class.ClassName, class.StudentID).
+		Count(&cnt)
+	if cnt == 0 {
+		err := db.Create(class).Error
+		if err != nil {
+			return err
+		}
+		return nil
+		/// 没有这一组关系
+	} else {
+		return errors.New("duplicate")
 	}
-	return nil
 }
 
 func GetClassList(offset, limit int) ([]*Class, error) {
@@ -33,9 +44,9 @@ func GetClassList(offset, limit int) ([]*Class, error) {
 func GetStudentListByClassName(className string) ([]*User, error) {
 	users := make([]*User, 0)
 	err := db.Model(&User{}).
-		Select("user.id, user.username, user.student_id").
-		Joins("join class on class.student_id = user.id").
-		Where("class.class_name = ?", className).
+		Select("users.id, users.username, users.student_id").
+		Joins("join classes on classes.student_id = users.id").
+		Where("classes.class_name = ?", className).
 		Scan(&users).Error
 	return users, err
 }
@@ -47,6 +58,15 @@ func CountStudentJoinedClassNumber(studentID int) (int64, error) {
 		Count(&cnt).
 		Error
 	return cnt, err
+}
+
+func GetClassesByStudentID(studentID int) ([]*Class, error) {
+	res := make([]*Class, 0)
+	err := db.Model(&Class{}).
+		Where("student_id = ?", studentID).
+		Scan(&res).
+		Error
+	return res, err
 }
 
 func GetClassByID(id int) (*Class, error) {

@@ -12,7 +12,7 @@ import (
 const MaxJoin = 3
 
 type JoinClassRequest struct {
-	ClassName string `form:"class_name" binding:"required"`
+	ClassName string `json:"class_name" binding:"required"`
 }
 
 // JoinClass
@@ -30,7 +30,7 @@ func JoinClass(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{})
 		return
 	}
-	if cnt > MaxJoin {
+	if cnt >= MaxJoin {
 		// 加入的班级超过上限
 		// 拒绝加入
 		ctx.JSON(http.StatusConflict, gin.H{})
@@ -40,8 +40,9 @@ func JoinClass(ctx *gin.Context) {
 		ClassName: req.ClassName,
 		StudentID: userID,
 	})
+	// 这个班级已经加入过了
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		ctx.JSON(http.StatusConflict, gin.H{})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{})
@@ -49,11 +50,11 @@ func JoinClass(ctx *gin.Context) {
 }
 
 type GetClassListRequest struct {
-	Offset int `form:"offset,limit=0" binding:"required"`
+	Offset int `form:"offset,default=0"`
 	Limit  int `form:"limit" binding:"required"`
 }
 
-func GetClassList(ctx *gin.Context) {
+func GetAllClassList(ctx *gin.Context) {
 	req := &GetClassListRequest{}
 	if err := ctx.ShouldBindQuery(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
@@ -98,12 +99,36 @@ func GetStudentListByClassName(ctx *gin.Context) {
 	}
 	res := make([]*GetStudentListByClassNameResponseInfo, len(users))
 	for i := 0; i < len(users); i++ {
-		res[i].ID = users[i].ID
-		res[i].StudentID = users[i].StudentID
-		res[i].Username = users[i].Username
+		res[i] = &GetStudentListByClassNameResponseInfo{
+			ID:        users[i].ID,
+			StudentID: users[i].StudentID,
+			Username:  users[i].Username,
+		}
+	}
+	if len(res) == 0 {
+		// 班级不存在
+		ctx.JSON(http.StatusNotFound, gin.H{})
+		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": res,
+	})
+	return
+}
+
+func GetClassListByStudentID(ctx *gin.Context) {
+	userID := ctx.GetInt("userID")
+	classes, err := model.GetClassesByStudentID(userID)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	nameArray := make([]string, len(classes))
+	for i := 0; i < len(classes); i++ {
+		nameArray[i] = classes[i].ClassName
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": nameArray,
 	})
 	return
 }
