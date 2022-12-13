@@ -132,3 +132,28 @@ func GetClassListByStudentID(ctx *gin.Context) {
 	})
 	return
 }
+
+type GetClassNameListByFuzzyQueryRequest struct {
+	Word string `form:"word" binding:"required"`
+}
+
+func GetClassNameListByFuzzyQuery(ctx *gin.Context) {
+	req := &GetClassNameListByFuzzyQueryRequest{}
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	classes, err := model.GetClassesByFuzzyQuery(req.Word)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	res := make([]string, len(classes))
+	for i, c := range classes {
+		res[i] = c.ClassName
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": res,
+	})
+	return
+}

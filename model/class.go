@@ -69,6 +69,17 @@ func GetClassesByStudentID(studentID int) ([]*Class, error) {
 	return res, err
 }
 
+func GetClassesByFuzzyQuery(word string) ([]*Class, error) {
+	res := make([]*Class, 0)
+	err := db.Model(&Class{}).
+		Select("class_name").
+		Group("class_name").
+		Having("class_name like ?", "%"+word+"%").
+		Scan(&res).
+		Error
+	return res, err
+}
+
 func GetClassByID(id int) (*Class, error) {
 	class := &Class{
 		ID: id,

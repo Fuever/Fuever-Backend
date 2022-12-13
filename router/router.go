@@ -7,7 +7,7 @@ import (
 
 func InitRoute(g *gin.Engine) {
 
-	//GenerateTest()
+	GenerateTest()
 
 	g.Use(middleware.Cors)
 	api := g.Group("/api")
@@ -30,7 +30,7 @@ func InitRoute(g *gin.Engine) {
 				cls := user.Group("/cls")
 				cls.Use(middleware.StuAuth)
 				{
-					cls.GET("/search/", nil)
+					cls.GET("/search/", GetClassNameListByFuzzyQuery)
 					cls.GET("/all/", GetAllClassList)
 					cls.GET("/", GetClassListByStudentID)
 					cls.GET("/:name", GetStudentListByClassName)
