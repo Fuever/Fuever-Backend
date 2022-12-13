@@ -44,7 +44,6 @@ func GetComments(postID int, offset int, limit int) ([]*CommentInfo, error) {
 					Age:          0,
 					Job:          "",
 					EntranceTime: 0,
-					ClassID:      0,
 					Residence:    "",
 				}
 				// 填空值作缓存

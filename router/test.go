@@ -29,7 +29,6 @@ func GenerateTest() {
 		Age:          22,
 		Job:          "胶工",
 		EntranceTime: time.Now().Unix(),
-		ClassID:      114514,
 		Residence:    "枝江",
 	})
 	if err != nil {
