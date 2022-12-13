@@ -181,7 +181,6 @@ type UserInfo struct {
 	Age          int    `json:"age,omitempty"`
 	Job          string `json:"job,omitempty"`
 	EntranceTime int64  `json:"entrance_time,omitempty"`
-	ClassID      int    `json:"class_id,omitempty"`
 	Residence    string `json:"residence,omitempty"`
 }
 
@@ -212,7 +211,6 @@ func GetUserInfo(ctx *gin.Context) {
 		Age:          user.Age,
 		Job:          user.Job,
 		EntranceTime: user.EntranceTime,
-		ClassID:      user.ClassID,
 		Residence:    user.Residence,
 	}
 	ctx.JSON(http.StatusOK, gin.H{
@@ -303,7 +301,6 @@ func GetBatchUserInfo(ctx *gin.Context) {
 			Age:          users[i].Age,
 			Job:          users[i].Job,
 			EntranceTime: users[i].EntranceTime,
-			ClassID:      users[i].ClassID,
 			Residence:    users[i].Residence,
 		}
 	}
@@ -333,7 +330,6 @@ func AdminUpdateUserInfo(ctx *gin.Context) {
 	user.Age = req.Age
 	user.Job = req.Job
 	user.Avatar = req.Avatar
-	user.ClassID = req.ClassID
 	user.Residence = req.Residence
 	user.EntranceTime = req.EntranceTime
 	err = model.UpdateUser(user)

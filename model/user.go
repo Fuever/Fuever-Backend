@@ -13,7 +13,6 @@ type User struct {
 	Age          int
 	Job          string
 	EntranceTime int64
-	ClassID      int `gorm:"column:class_id;index"`
 	Residence    string
 }
 

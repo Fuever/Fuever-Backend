@@ -26,6 +26,14 @@ func InitRoute(g *gin.Engine) {
 
 				user.GET("/stu/auth", GetStudentAuthMessage)
 				user.POST("/stu/auth", AuthStudentIdentity)
+
+				cls := user.Group("/cls")
+				cls.Use(middleware.StuAuth)
+				{
+					cls.GET("/", GetClassList)
+					cls.GET("/:name", GetStudentListByClassName)
+					cls.POST("/", JoinClass)
+				}
 			}
 
 			admin := auth.Group("/admin")
