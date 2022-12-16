@@ -45,7 +45,7 @@ func GetStudentListByClassName(className string) ([]*User, error) {
 	users := make([]*User, 0)
 	err := db.Model(&User{}).
 		Select("users.id, users.username, users.student_id").
-		Joins("join classes on classes.student_id = users.id").
+		Joins("join classes on classes.student_id = users.student_id").
 		Where("classes.class_name = ?", className).
 		Scan(&users).Error
 	return users, err
