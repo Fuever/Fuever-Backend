@@ -11,8 +11,8 @@ import (
 // GenerateTest create demo data
 func GenerateTest() {
 	err := model.CreateAdmin(&model.Admin{
-		Name:     "1234567",
-		Password: repassword.GeneratePasswordHash("1234567"),
+		Name:     "野兽先辈",
+		Password: repassword.GeneratePasswordHash("114514"),
 	})
 	if err != nil {
 		panic(err)
@@ -38,6 +38,7 @@ func GenerateTest() {
 	blockNumber := 5
 	postNumber := 300
 	commentNumber := 5000
+	classNumber := 10
 
 	for i := 0; i < blockNumber; i++ {
 		model.CreateBlock(&model.Block{
@@ -105,6 +106,12 @@ func GenerateTest() {
 			PositionY:  rand.Float64(),
 		}
 		model.CreateGallery(gallery)
+	}
+	for i := 0; i < classNumber; i++ {
+		model.CreateClass(&model.Class{
+			ClassName: strconv.Itoa(rand.Int()),
+			StudentID: 32004122,
+		})
 	}
 
 }
