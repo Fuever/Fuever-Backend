@@ -163,11 +163,11 @@ func GenerateTest() {
 		clsName := strconv.Itoa(rand.Int())
 		model.CreateClass(&model.Class{
 			ClassName: clsName,
-			StudentID: stuNumArray[rand.Intn(4)],
+			StudentID: stuNumArray[1+rand.Intn(3)],
 		})
 		model.CreateClass(&model.Class{
 			ClassName: clsName,
-			StudentID: stuNumArray[rand.Intn(4)],
+			StudentID: stuNumArray[1+rand.Intn(3)],
 		})
 	}
 
