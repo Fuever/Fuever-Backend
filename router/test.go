@@ -89,7 +89,7 @@ func GenerateTest() {
 	blockNumber := 5
 	postNumber := 300
 	commentNumber := 5000
-	classNumber := 10
+	classNumber := 5
 	stuNumArray := []int{32004122, 32004106, 32004132, 32004120}
 
 	for i := 0; i < blockNumber; i++ {
@@ -161,14 +161,6 @@ func GenerateTest() {
 	}
 	for i := 0; i < classNumber; i++ {
 		clsName := strconv.Itoa(rand.Int())
-		model.CreateClass(&model.Class{
-			ClassName: clsName,
-			StudentID: stuNumArray[rand.Intn(4)],
-		})
-		model.CreateClass(&model.Class{
-			ClassName: clsName,
-			StudentID: stuNumArray[rand.Intn(4)],
-		})
 		model.CreateClass(&model.Class{
 			ClassName: clsName,
 			StudentID: stuNumArray[rand.Intn(4)],

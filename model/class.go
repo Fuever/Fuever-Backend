@@ -60,10 +60,14 @@ func CountStudentJoinedClassNumber(studentID int) (int64, error) {
 	return cnt, err
 }
 
-func GetClassesByStudentID(studentID int) ([]*Class, error) {
+func GetClassesByStudentID(userID int) ([]*Class, error) {
+	user, err := GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
 	res := make([]*Class, 0)
-	err := db.Model(&Class{}).
-		Where("student_id = ?", studentID).
+	err = db.Model(&Class{}).
+		Where("student_id = ?", user.StudentID).
 		Scan(&res).
 		Error
 	return res, err
