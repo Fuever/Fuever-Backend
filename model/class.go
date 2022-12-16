@@ -51,14 +51,10 @@ func GetStudentListByClassName(className string) ([]*User, error) {
 	return users, err
 }
 
-func CountStudentJoinedClassNumber(userID int) (int64, error) {
-	user, err := GetUserByID(userID)
-	if err != nil {
-		return -1, err
-	}
+func CountStudentJoinedClassNumber(studentID int) (int64, error) {
 	cnt := int64(0)
-	err = db.Model(&Class{}).
-		Where("student_id = ?", user.StudentID).
+	err := db.Model(&Class{}).
+		Where("student_id = ?", studentID).
 		Count(&cnt).
 		Error
 	return cnt, err

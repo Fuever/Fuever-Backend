@@ -25,7 +25,13 @@ func JoinClass(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
-	cnt, err := model.CountStudentJoinedClassNumber(userID)
+	user, err := model.GetUserByID(userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	studentID := user.StudentID
+	cnt, err := model.CountStudentJoinedClassNumber(studentID)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		ctx.JSON(http.StatusInternalServerError, gin.H{})
 		return
@@ -38,7 +44,7 @@ func JoinClass(ctx *gin.Context) {
 	}
 	err = model.CreateClass(&model.Class{
 		ClassName: req.ClassName,
-		StudentID: userID,
+		StudentID: studentID,
 	})
 	// 这个班级已经加入过了
 	if err != nil {
