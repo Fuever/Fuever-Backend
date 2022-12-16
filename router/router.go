@@ -32,7 +32,7 @@ func InitRoute(g *gin.Engine) {
 				{
 					cls.GET("/search/", GetClassNameListByFuzzyQuery)
 					cls.GET("/all/", GetAllClassList)
-					cls.GET("/", GetClassListByStudentID)
+					cls.GET("/", GetClassListByStudentIDWithUserAuth)
 					cls.GET("/:name", GetStudentListByClassName)
 					cls.POST("/", JoinClass)
 				}
@@ -86,6 +86,11 @@ func InitRoute(g *gin.Engine) {
 					block.PUT("/", UpdateBlock)
 					block.DELETE("/:id", DeleteBlock)
 
+				}
+
+				cls := admin.Group("cls")
+				{
+					cls.GET("/:id", GetClassListByStudentIDWithAdminAuth)
 				}
 
 				img := admin.Group("/img")

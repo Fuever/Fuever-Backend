@@ -1,7 +1,5 @@
 package router
 
-//TODO 测试这三个接口
-
 import (
 	"Fuever/model"
 	"github.com/gin-gonic/gin"
@@ -122,7 +120,7 @@ func GetStudentListByClassName(ctx *gin.Context) {
 	return
 }
 
-func GetClassListByStudentID(ctx *gin.Context) {
+func GetClassListByStudentIDWithUserAuth(ctx *gin.Context) {
 	userID := ctx.GetInt("userID")
 	classes, err := model.GetClassesByStudentID(userID)
 	if err != nil && err != gorm.ErrRecordNotFound {
@@ -150,6 +148,31 @@ func GetClassNameListByFuzzyQuery(ctx *gin.Context) {
 		return
 	}
 	classes, err := model.GetClassesByFuzzyQuery(req.Word)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	res := make([]string, len(classes))
+	for i, c := range classes {
+		res[i] = c.ClassName
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": res,
+	})
+	return
+}
+
+type GetClassListByStudentIDWithAdminAuthRequest struct {
+	UserID int `uri:"id" binding:"required"`
+}
+
+func GetClassListByStudentIDWithAdminAuth(ctx *gin.Context) {
+	req := &GetClassListByStudentIDWithAdminAuthRequest{}
+	if err := ctx.ShouldBindUri(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	classes, err := model.GetClassesByStudentID(req.UserID)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		ctx.JSON(http.StatusInternalServerError, gin.H{})
 		return
