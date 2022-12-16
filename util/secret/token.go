@@ -19,7 +19,7 @@ var (
 
 const (
 	secretKey  = "veni vidi vici"
-	expireTime = 37 * time.Minute
+	expireTime = 7 * 24 * time.Hour
 )
 
 // GenerateTokenAndCache
