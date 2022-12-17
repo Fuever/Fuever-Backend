@@ -4,24 +4,28 @@ go 1.19
 
 require (
 	github.com/gin-gonic/gin v1.8.1
-	github.com/go-playground/assert/v2 v2.2.0
+	github.com/go-playground/assert/v2 v2.2.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.5
 	gorm.io/driver/postgres v1.3.4
 	gorm.io/gorm v1.23.8
 )
 
 require (
-	github.com/gin-contrib/cors v1.4.0
+	github.com/gin-contrib/cache v1.2.0
 	github.com/stretchr/testify v1.8.0
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.40
 )
 
 require (
+	github.com/bradfitz/gomemcache v0.0.0-20220106215444-fb4bf637b56d // indirect
 	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
+	github.com/gomodule/redigo v1.8.9 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/memcachier/mc/v3 v3.0.3 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mozillazg/go-httpheader v0.3.1 // indirect
+	github.com/robfig/go-cache v0.0.0-20130306151617-9fc39e0dbf62 // indirect
 	golang.org/x/image v0.0.0-20190501045829-6d32002ffd75 // indirect
 )
 

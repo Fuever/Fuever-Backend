@@ -23,7 +23,9 @@ var (
 )
 
 func InitDB() {
-	dbEngine, err := gorm.Open(postgres.Open(_dsn), &gorm.Config{})
+	dbEngine, err := gorm.Open(postgres.Open(_dsn), &gorm.Config{
+		//Logger: logger.Default.LogMode(logger.Silent), //禁用gorm慢查询警告
+	})
 	if err != nil {
 		// can't connect database
 		log.Fatalln(err)
