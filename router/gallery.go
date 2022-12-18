@@ -53,7 +53,7 @@ type CreateGalleryRequest struct {
 }
 
 func CreateGallery(ctx *gin.Context) {
-	authID := ctx.GetInt("authID")
+	authID := ctx.GetInt("adminID")
 	req := &CreateGalleryRequest{}
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
@@ -99,20 +99,14 @@ type DeleteGalleryRequest struct {
 }
 
 func DeleteGallery(ctx *gin.Context) {
-	adminID := ctx.GetInt("adminID")
 	req := &DeleteGalleryRequest{}
 	if err := ctx.ShouldBindUri(req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
-	gallery, err := model.GetGalleryByID(req.ID)
+	_, err := model.GetGalleryByID(req.ID)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{})
-		return
-	}
-	if gallery.AuthorID != adminID {
-		// 不是创建者 不允许删除
-		ctx.JSON(http.StatusForbidden, gin.H{})
 		return
 	}
 	err = model.DeleteGalleryID(req.ID)

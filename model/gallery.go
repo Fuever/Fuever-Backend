@@ -34,8 +34,8 @@ func GetAllGalleries() ([]*Gallery, error) {
 	err := db.
 		Select(
 			"id, " +
-				"title, " +
 				"author_id, " +
+				"title, " +
 				"create_time, " +
 				"position_x, " +
 				"position_y, " +
