@@ -10,6 +10,8 @@ services:
       POSTGRES_DB: fuever
       POSTGRES_PASSWORD: fuever
       POSTGRES_USER: fuever
+    volumes:
+      - fuever_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
