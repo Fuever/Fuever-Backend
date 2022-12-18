@@ -444,3 +444,28 @@ func AuthStudentIdentity(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{})
 	return
 }
+
+const _recommendUserNumber = 3
+
+func RecommendUser(ctx *gin.Context) {
+	userID := ctx.GetInt("userID")
+	user, err := model.PickRandomUser(userID, _recommendUserNumber)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	info := make([]*UserInfo, len(user))
+	for i := 0; i < len(user); i++ {
+		info[i] = &UserInfo{
+			ID:        user[i].ID,
+			Username:  user[i].Username,
+			Nickname:  user[i].Nickname,
+			Avatar:    user[i].Avatar,
+			Residence: user[i].Residence,
+		}
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": info,
+	})
+	return
+}

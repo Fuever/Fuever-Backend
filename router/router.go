@@ -10,7 +10,7 @@ import (
 
 func InitRoute(g *gin.Engine) {
 
-	GenerateTest()
+	//GenerateTest()
 
 	store := persistence.NewInMemoryStore(1 * time.Second)
 
@@ -31,6 +31,8 @@ func InitRoute(g *gin.Engine) {
 
 				user.GET("/stu/auth", GetStudentAuthMessage)
 				user.POST("/stu/auth", AuthStudentIdentity)
+
+				user.GET("/reco/", RecommendUser)
 
 				cls := user.Group("/cls")
 				cls.Use(middleware.StuAuth)
@@ -102,12 +104,6 @@ func InitRoute(g *gin.Engine) {
 				{
 					img.POST("/", UploadImage)
 				}
-			}
-
-			// recommend alumnus api
-			reco := auth.Group("/recommend")
-			{
-				reco.GET("/", nil)
 			}
 
 			post := auth.Group("/posts")
@@ -194,6 +190,8 @@ func InitRouteWithoutCache(g *gin.Engine) {
 				user.GET("/stu/auth", GetStudentAuthMessage)
 				user.POST("/stu/auth", AuthStudentIdentity)
 
+				user.GET("/reco", RecommendUser)
+
 				cls := user.Group("/cls")
 				cls.Use(middleware.StuAuth)
 				{
@@ -264,12 +262,6 @@ func InitRouteWithoutCache(g *gin.Engine) {
 				{
 					img.POST("/", UploadImage)
 				}
-			}
-
-			// recommend alumnus api
-			reco := auth.Group("/recommend")
-			{
-				reco.GET("/", nil)
 			}
 
 			post := auth.Group("/posts")

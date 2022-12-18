@@ -81,3 +81,11 @@ func GetUserWithOffsetLimit(offset int, limit int) ([]*User, error) {
 	err := db.Offset(offset).Limit(limit).Find(&users).Error
 	return users, err
 }
+
+func PickRandomUser(ignoreUserID int, limit int) ([]*User, error) {
+	users := make([]*User, 0)
+	err := db.Raw(
+		"SELECT * FROM users WHERE (users.id != ?) AND (users.student_id != 0) AND (users.id >= RANDOM() * (SELECT MAX(users.id) FROM users)) LIMIT ?",
+		ignoreUserID, limit).Scan(&users).Error
+	return users, err
+}
