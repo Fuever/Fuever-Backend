@@ -35,6 +35,7 @@ func GetAllGalleries() ([]*Gallery, error) {
 		Select(
 			"id, " +
 				"title, " +
+				"author_id, " +
 				"create_time, " +
 				"position_x, " +
 				"position_y, " +

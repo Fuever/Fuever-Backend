@@ -10,7 +10,7 @@ import (
 
 func InitRoute(g *gin.Engine) {
 
-	GenerateTest()
+	//GenerateTest()
 
 	store := persistence.NewInMemoryStore(1 * time.Second)
 
