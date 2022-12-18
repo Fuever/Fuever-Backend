@@ -41,3 +41,6 @@ services:
     depends_on:
       - db
       - cache
+
+volumes:
+  fuever_data:
