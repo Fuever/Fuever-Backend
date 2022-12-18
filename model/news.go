@@ -101,8 +101,8 @@ func GetNewsesInfo(offset int, limit int) ([]*NewsInfo, error) {
 	}
 	for i := 0; i < len(info); i++ {
 		s := info[i].Content
-		if len(s) > 20 {
-			info[i].Content = s[:20]
+		if len(s) > 42 {
+			info[i].Content = s[:42]
 		}
 	}
 	return info, nil
