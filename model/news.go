@@ -3,7 +3,7 @@ package model
 type News struct {
 	ID         int    `gorm:"primaryKey;autoIIncrement" json:"id"`
 	AuthorID   int    `gorm:"column:author_id;not null;index" json:"author_id"`
-	Title      string `gorm:"varchar(128);not null" json:"title"` // 我觉得这个地方要建一个索引啊
+	Title      string `gorm:"varchar(128);not null; index" json:"title"` // 我觉得这个地方要建一个索引啊
 	Content    string `gorm:"text;not null" json:"content"`
 	CreateTime int64  `gorm:"column:created_time" json:"create_time"`
 	Cover      string `gorm:"varchar(128)" json:"cover"` // 新闻的封面
