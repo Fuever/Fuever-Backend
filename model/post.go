@@ -41,7 +41,7 @@ func GetTopAndNormalPostWithOffsetLimit(offset int, limit int) ([]*Post, error) 
 	err := db.Where("state = ? or state = ?", _top, _normal).
 		Offset(offset).
 		Limit(limit).
-		Order("state desc ,updated_time desc").
+		Order("state desc ,updated_time asc").
 		Find(&posts).Error
 	return posts, err
 }
