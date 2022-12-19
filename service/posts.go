@@ -4,7 +4,7 @@ import "Fuever/model"
 
 type PostInfo struct {
 	model.Post
-	AuthorName    string `json:"author_name,omitempty"`
+	AuthorName    string `json:"author_name"`
 	AuthorAvatar  string `json:"author_avatar,omitempty"`
 	CommentNumber int    `json:"comment_number"`
 }
@@ -142,6 +142,9 @@ func convertToPostInfo(posts []*model.Post) ([]*PostInfo, error) {
 					AuthorName:   user.Nickname,
 				}
 			}
+		}
+		if info.AuthorName == "" {
+			info.AuthorName = "佚名"
 		}
 		postInfo[i] = info
 	}
