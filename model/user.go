@@ -8,7 +8,7 @@ type User struct {
 	Nickname     string `gorm:"index;varchar(32)"`
 	Avatar       string `gorm:"varchar(64)"`
 	StudentID    int    `gorm:"column:student_id;index"` //未验证时为空
-	Phone        int    `gorm:"uniqueIndex"`
+	Phone        int    `gorm:"index"`
 	Gender       bool
 	Age          int
 	Job          string

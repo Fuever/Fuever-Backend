@@ -107,3 +107,17 @@ func GetNewsesInfo(offset int, limit int) ([]*NewsInfo, error) {
 	}
 	return info, nil
 }
+
+func GetNewsesInfoWithContent(offset int, limit int) ([]*NewsInfo, error) {
+	info := make([]*NewsInfo, 0)
+	err := db.Model(&News{}).
+		Select("news.id, news.author_id, content, title, created_time, cover, admins.name as author_name").
+		Joins("join admins on news.author_id=admins.id").
+		Offset(offset).
+		Limit(limit).
+		Scan(&info).Error
+	if err != nil {
+		return nil, err
+	}
+	return info, nil
+}

@@ -151,3 +151,28 @@ func DeleteNews(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{})
 	return
 }
+
+func GetAllNewsWithContent(ctx *gin.Context) {
+	offsetString, offsetFlag := ctx.GetQuery("offset")
+	limitString, limitFlag := ctx.GetQuery("limit")
+	offset, offsetErr := strconv.Atoi(offsetString)
+	limit, limitErr := strconv.Atoi(limitString)
+	if !offsetFlag || !limitFlag || offsetErr != nil || limitErr != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+	newses, err := service.GetNewsesWithContent(offset, limit)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			// 如果错误是记录不存在
+			ctx.JSON(http.StatusNotFound, gin.H{})
+			return
+		}
+		// 服务器错误
+		ctx.JSON(http.StatusInternalServerError, gin.H{})
+		log.Println(err)
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"data": newses})
+	return
+}

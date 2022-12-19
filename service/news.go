@@ -9,3 +9,6 @@ func GetNews(newsID int) (*model.NewsInfo, error) {
 func GetNewses(offset int, limit int) ([]*model.NewsInfo, error) {
 	return model.GetNewsesInfo(offset, limit)
 }
+func GetNewsesWithContent(offset int, limit int) ([]*model.NewsInfo, error) {
+	return model.GetNewsesInfoWithContent(offset, limit)
+}
